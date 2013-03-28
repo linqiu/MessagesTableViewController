@@ -49,6 +49,10 @@
              hasSpeakerLabel:(BOOL)hasSpeakerLabel
           reuseIdentifier:(NSString *)reuseIdentifier;
 
+- (id)initWithBubbleStyle:(JSBubbleMessageStyle)style
+          hasBothLabel:(BOOL)hasSpeakerLabel
+          reuseIdentifier:(NSString *)reuseIdentifier;
+
 #pragma mark - Message Cell
 - (void)setMessage:(NSString *)msg;
 - (void)setTimestamp:(NSDate *)date;

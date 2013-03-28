@@ -106,6 +106,39 @@
     [self.contentView bringSubviewToFront:self.speakerLabel];
 }
 
+- (void)configureBothLabel
+{
+    self.speakerLabel = [[UILabel alloc] initWithFrame:CGRectMake(0.0f,
+                                                                  18.5f,
+                                                                  [UIScreen mainScreen].bounds.size.width,
+                                                                  14.5f)];
+    self.speakerLabel.autoresizingMask =  UIViewAutoresizingNone;
+    self.speakerLabel.backgroundColor = [UIColor clearColor];
+    self.speakerLabel.textAlignment = NSTextAlignmentLeft;
+    self.speakerLabel.textColor = [UIColor messagesSpeakerColor];
+    self.speakerLabel.shadowColor = [UIColor whiteColor];
+    self.speakerLabel.shadowOffset = CGSizeMake(0.0f, 1.0f);
+    self.speakerLabel.font = [UIFont boldSystemFontOfSize:11.5f];
+    
+    [self.contentView addSubview:self.speakerLabel];
+    [self.contentView bringSubviewToFront:self.speakerLabel];
+    
+    self.timestampLabel = [[UILabel alloc] initWithFrame:CGRectMake(0.0f,
+                                                                    4.0f,
+                                                                    [UIScreen mainScreen].bounds.size.width,
+                                                                    14.5f)];
+    self.timestampLabel.autoresizingMask =  UIViewAutoresizingNone;
+    self.timestampLabel.backgroundColor = [UIColor clearColor];
+    self.timestampLabel.textAlignment = NSTextAlignmentCenter;
+    self.timestampLabel.textColor = [UIColor messagesTimestampColor];
+    self.timestampLabel.shadowColor = [UIColor whiteColor];
+    self.timestampLabel.shadowOffset = CGSizeMake(0.0f, 1.0f);
+    self.timestampLabel.font = [UIFont boldSystemFontOfSize:11.5f];
+    
+    [self.contentView addSubview:self.timestampLabel];
+    [self.contentView bringSubviewToFront:self.timestampLabel];
+}
+
 - (void)configureWithStyle:(JSBubbleMessageStyle)style timestamp:(BOOL)hasTimestamp
 {
     CGFloat bubbleY = 0.0f;
@@ -172,7 +205,38 @@
     return self;
 }
 
+- (void)configureWithStyle:(JSBubbleMessageStyle)style bothLabel:(BOOL)hasSpeakerLabel
+{
+    CGFloat bubbleY = 0.0f;
+    
+    if(hasSpeakerLabel) {
+        [self configureSpeakerLabel];
+        bubbleY = 28.0f;
+    }
+    
+    CGRect frame = CGRectMake(0.0f,
+                              bubbleY,
+                              self.contentView.frame.size.width,
+                              self.contentView.frame.size.height - self.speakerLabel.frame.size.height - self.timestampLabel.frame.size.height);
+    
+    self.bubbleView = [[JSBubbleView alloc] initWithFrame:frame
+                                              bubbleStyle:style];
+    
+    self.bubbleView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    
+    [self.contentView addSubview:self.bubbleView];
+    [self.contentView sendSubviewToBack:self.bubbleView];
+}
 
+- (id)initWithBubbleStyle:(JSBubbleMessageStyle)style hasBothLabel:(BOOL)hasSpeakerLabel reuseIdentifier:(NSString *)reuseIdentifier
+{
+    self = [super initWithStyle:UITableViewCellStyleDefault reuseIdentifier:reuseIdentifier];
+    if(self) {
+        [self setup];
+        [self configureWithStyle:style bothLabel:hasSpeakerLabel];
+    }
+    return self;
+}
 #pragma mark - Setters
 - (void)setBackgroundColor:(UIColor *)color
 {

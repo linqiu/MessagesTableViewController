@@ -171,29 +171,55 @@
     
     NSString *CellID = [NSString stringWithFormat:@"MessageCell_%d_%d", style, hasTimestamp];
     NSString *SpeakerID = [NSString stringWithFormat:@"MessageSpeakerCell_%d_%d", style, hasSpeakerLabel];
+    NSString *CellSpeakerID = [NSString stringWithFormat:@"MessageCellSpeakerCell_%d_%d", style, hasSpeakerLabel];
+
+    JSBubbleMessageCell *cellSpeakerTimestamp = (JSBubbleMessageCell *)[tableView dequeueReusableCellWithIdentifier:CellSpeakerID];       
     JSBubbleMessageCell *cell = (JSBubbleMessageCell *)[tableView dequeueReusableCellWithIdentifier:CellID];
     JSBubbleMessageCell *cellSpeaker = (JSBubbleMessageCell *)[tableView dequeueReusableCellWithIdentifier:SpeakerID];
     
-    if(!cell || !cellSpeaker) {
+    if(!cell || !cellSpeaker || !cellSpeakerTimestamp) {
         if (hasTimestamp)
             cell = [[JSBubbleMessageCell alloc] initWithBubbleStyle:style
                                                        hasTimestamp:hasTimestamp
                                                     reuseIdentifier:CellID];
         if (hasSpeakerLabel)
-            cell = [[JSBubbleMessageCell alloc] initWithBubbleStyle:style
+            cellSpeaker = [[JSBubbleMessageCell alloc] initWithBubbleStyle:style
                                                        hasSpeakerLabel:hasSpeakerLabel
                                                     reuseIdentifier:SpeakerID];
+        if (hasTimestamp && hasSpeakerLabel)
+            cellSpeakerTimestamp = [[JSBubbleMessageCell alloc] initWithBubbleStyle:style
+                                                           hasBothLabel:hasSpeakerLabel
+                                                           reuseIdentifier:SpeakerID];
     }
     
-    if(hasTimestamp)
+    if(hasTimestamp) {
         [cell setTimestamp:[self.dataSource timestampForRowAtIndexPath:indexPath]];
-    if(hasSpeakerLabel) {
-        [cell setSpeaker:[self.dataSource speakerNameForRowAtIndexPath:indexPath]];
+        [cell setMessage:[self.dataSource textForRowAtIndexPath:indexPath]];
+        [cell setBackgroundColor:tableView.backgroundColor];
+        return cell;
     }
-    [cell setMessage:[self.dataSource textForRowAtIndexPath:indexPath]];
-    [cell setBackgroundColor:tableView.backgroundColor];
     
-    return cell;
+    else if(hasSpeakerLabel) {
+        [cellSpeaker setSpeaker:[self.dataSource speakerNameForRowAtIndexPath:indexPath]];
+        [cellSpeaker setMessage:[self.dataSource textForRowAtIndexPath:indexPath]];
+        [cellSpeaker setBackgroundColor:tableView.backgroundColor];
+        return cellSpeaker;
+    }
+    else if(hasTimestamp && hasSpeakerLabel) {
+        [cellSpeakerTimestamp setTimestamp:[self.dataSource timestampForRowAtIndexPath:indexPath]];
+        [cellSpeakerTimestamp setSpeaker:[self.dataSource speakerNameForRowAtIndexPath:indexPath]];
+        [cellSpeakerTimestamp setMessage:[self.dataSource textForRowAtIndexPath:indexPath]];
+        [cellSpeakerTimestamp setBackgroundColor:tableView.backgroundColor];
+        return cellSpeakerTimestamp;
+    }
+    else {
+        [cell setMessage:[self.dataSource textForRowAtIndexPath:indexPath]];
+        [cell setBackgroundColor:tableView.backgroundColor];
+        return cell;
+    }
+   
+    
+    
 }
 
 #pragma mark - Table view delegate
