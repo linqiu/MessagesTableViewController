@@ -166,19 +166,30 @@
 {
     JSBubbleMessageStyle style = [self.delegate messageStyleForRowAtIndexPath:indexPath];
     BOOL hasTimestamp = [self shouldHaveTimestampForRowAtIndexPath:indexPath];
+    BOOL hasSpeakerLabel = [self shouldHaveSpeakerForRowAtIndexPath:indexPath];
+    NSLog(@"speakerlabel? %s", hasSpeakerLabel? "true":"false");
     
     NSString *CellID = [NSString stringWithFormat:@"MessageCell_%d_%d", style, hasTimestamp];
+    NSString *SpeakerID = [NSString stringWithFormat:@"MessageSpeakerCell_%d_%d", style, hasSpeakerLabel];
     JSBubbleMessageCell *cell = (JSBubbleMessageCell *)[tableView dequeueReusableCellWithIdentifier:CellID];
+    JSBubbleMessageCell *cellSpeaker = (JSBubbleMessageCell *)[tableView dequeueReusableCellWithIdentifier:SpeakerID];
     
-    if(!cell) {
-        cell = [[JSBubbleMessageCell alloc] initWithBubbleStyle:style
-                                                   hasTimestamp:hasTimestamp
-                                                reuseIdentifier:CellID];
+    if(!cell || !cellSpeaker) {
+        if (hasTimestamp)
+            cell = [[JSBubbleMessageCell alloc] initWithBubbleStyle:style
+                                                       hasTimestamp:hasTimestamp
+                                                    reuseIdentifier:CellID];
+        if (hasSpeakerLabel)
+            cell = [[JSBubbleMessageCell alloc] initWithBubbleStyle:style
+                                                       hasSpeakerLabel:hasSpeakerLabel
+                                                    reuseIdentifier:SpeakerID];
     }
     
     if(hasTimestamp)
         [cell setTimestamp:[self.dataSource timestampForRowAtIndexPath:indexPath]];
-    
+    if(hasSpeakerLabel) {
+        [cell setSpeaker:[self.dataSource speakerNameForRowAtIndexPath:indexPath]];
+    }
     [cell setMessage:[self.dataSource textForRowAtIndexPath:indexPath]];
     [cell setBackgroundColor:tableView.backgroundColor];
     
@@ -189,11 +200,25 @@
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     CGFloat dateHeight = [self shouldHaveTimestampForRowAtIndexPath:indexPath] ? DATE_LABEL_HEIGHT : 0.0f;
-    
-    return [JSBubbleView cellHeightForText:[self.dataSource textForRowAtIndexPath:indexPath]] + dateHeight;
+    CGFloat speakerHeight = [self shouldHaveSpeakerForRowAtIndexPath:indexPath] ? DATE_LABEL_HEIGHT : 0.0f;
+    return [JSBubbleView cellHeightForText:[self.dataSource textForRowAtIndexPath:indexPath]] + dateHeight + speakerHeight;
 }
 
 #pragma mark - Messages view controller
+- (BOOL)shouldHaveSpeakerForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    switch ([self.delegate speakerPolicyForMessagesView]) {
+        case JSMessageViewSpeakerPolicyEveryoneButMe:
+            return YES;
+            break;
+        case JSMessageViewSpeakerPolicyEveryone:
+            return NO;
+            break;
+    }
+    
+    return NO;
+}
+
 - (BOOL)shouldHaveTimestampForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     switch ([self.delegate timestampPolicyForMessagesView]) {

@@ -32,5 +32,6 @@
 
 + (UIColor *)messagesBackgroundColor;
 + (UIColor *)messagesTimestampColor;
++ (UIColor *)messagesSpeakerColor;
 
 @end

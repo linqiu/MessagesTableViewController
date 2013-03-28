@@ -40,10 +40,13 @@
 
 @property (strong, nonatomic) JSBubbleView *bubbleView;
 @property (strong, nonatomic) UILabel *timestampLabel;
+@property (strong, nonatomic) UILabel *speakerLabel;
 
 - (void)setup;
 - (void)configureTimestampLabel;
+- (void)configureSpeakerLabel;
 - (void)configureWithStyle:(JSBubbleMessageStyle)style timestamp:(BOOL)hasTimestamp;
+- (void)configureWithStyle:(JSBubbleMessageStyle)style speakerLabel:(BOOL)hasSpeakerLabel;
 
 @end
 
@@ -85,6 +88,24 @@
     [self.contentView bringSubviewToFront:self.timestampLabel];
 }
 
+- (void)configureSpeakerLabel
+{
+    self.speakerLabel = [[UILabel alloc] initWithFrame:CGRectMake(0.0f,
+                                                                    4.0f,
+                                                                    [UIScreen mainScreen].bounds.size.width,
+                                                                    14.5f)];
+    self.speakerLabel.autoresizingMask =  UIViewAutoresizingNone;
+    self.speakerLabel.backgroundColor = [UIColor clearColor];
+    self.speakerLabel.textAlignment = NSTextAlignmentLeft;
+    self.speakerLabel.textColor = [UIColor messagesSpeakerColor];
+    self.speakerLabel.shadowColor = [UIColor whiteColor];
+    self.speakerLabel.shadowOffset = CGSizeMake(0.0f, 1.0f);
+    self.speakerLabel.font = [UIFont boldSystemFontOfSize:11.5f];
+    
+    [self.contentView addSubview:self.speakerLabel];
+    [self.contentView bringSubviewToFront:self.speakerLabel];
+}
+
 - (void)configureWithStyle:(JSBubbleMessageStyle)style timestamp:(BOOL)hasTimestamp
 {
     CGFloat bubbleY = 0.0f;
@@ -107,7 +128,6 @@
     [self.contentView addSubview:self.bubbleView];
     [self.contentView sendSubviewToBack:self.bubbleView];
 }
-
 - (id)initWithBubbleStyle:(JSBubbleMessageStyle)style hasTimestamp:(BOOL)hasTimestamp reuseIdentifier:(NSString *)reuseIdentifier
 {
     self = [super initWithStyle:UITableViewCellStyleDefault reuseIdentifier:reuseIdentifier];
@@ -117,6 +137,41 @@
     }
     return self;
 }
+
+
+- (void)configureWithStyle:(JSBubbleMessageStyle)style speakerLabel:(BOOL)hasSpeakerLabel
+{
+    CGFloat bubbleY = 0.0f;
+    
+    if(hasSpeakerLabel) {
+        [self configureSpeakerLabel];
+        bubbleY = 14.0f;
+    }
+    
+    CGRect frame = CGRectMake(0.0f,
+                              bubbleY,
+                              self.contentView.frame.size.width,
+                              self.contentView.frame.size.height - self.speakerLabel.frame.size.height);
+    
+    self.bubbleView = [[JSBubbleView alloc] initWithFrame:frame
+                                              bubbleStyle:style];
+    
+    self.bubbleView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    
+    [self.contentView addSubview:self.bubbleView];
+    [self.contentView sendSubviewToBack:self.bubbleView];
+}
+
+- (id)initWithBubbleStyle:(JSBubbleMessageStyle)style hasSpeakerLabel:(BOOL)hasSpeakerLabel reuseIdentifier:(NSString *)reuseIdentifier
+{
+    self = [super initWithStyle:UITableViewCellStyleDefault reuseIdentifier:reuseIdentifier];
+    if(self) {
+        [self setup];
+        [self configureWithStyle:style speakerLabel:hasSpeakerLabel];
+    }
+    return self;
+}
+
 
 #pragma mark - Setters
 - (void)setBackgroundColor:(UIColor *)color
@@ -138,5 +193,11 @@
                                                               dateStyle:NSDateFormatterMediumStyle
                                                               timeStyle:NSDateFormatterShortStyle];
 }
+
+- (void)setSpeaker:(NSString*) name
+{
+    self.speakerLabel.text = name;
+}
+
 
 @end

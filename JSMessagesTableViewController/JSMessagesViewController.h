@@ -48,14 +48,19 @@ typedef enum {
     JSMessagesViewTimestampPolicyCustom
 } JSMessagesViewTimestampPolicy;
 
-
+typedef enum {
+    JSMessageViewSpeakerPolicyEveryoneButMe = 0,
+    JSMessageViewSpeakerPolicyEveryone
+} JSMessageViewSpeakerPolicy;
 
 @protocol JSMessagesViewDelegate <NSObject>
 @required
 - (void)sendPressed:(UIButton *)sender withText:(NSString *)text;
 - (JSBubbleMessageStyle)messageStyleForRowAtIndexPath:(NSIndexPath *)indexPath;
 - (JSMessagesViewTimestampPolicy)timestampPolicyForMessagesView;
+- (JSMessageViewSpeakerPolicy) speakerPolicyForMessagesView;
 - (BOOL)hasTimestampForRowAtIndexPath:(NSIndexPath *)indexPath;
+- (BOOL)hasSpeakerForRowAtIndexPath:(NSIndexPath *)indexPath;
 @end
 
 
@@ -64,6 +69,7 @@ typedef enum {
 @required
 - (NSString *)textForRowAtIndexPath:(NSIndexPath *)indexPath;
 - (NSDate *)timestampForRowAtIndexPath:(NSIndexPath *)indexPath;
+- (NSString *)speakerNameForRowAtIndexPath:(NSIndexPath *) indexPath;
 @end
 
 
@@ -85,6 +91,7 @@ typedef enum {
 
 #pragma mark - Messages view controller
 - (BOOL)shouldHaveTimestampForRowAtIndexPath:(NSIndexPath *)indexPath;
+- (BOOL)shouldHaveSpeakerForRowAtIndexPath:(NSIndexPath *)indexPath;
 - (void)finishSend;
 - (void)setBackgroundColor:(UIColor *)color;
 - (void)scrollToBottomAnimated:(BOOL)animated;

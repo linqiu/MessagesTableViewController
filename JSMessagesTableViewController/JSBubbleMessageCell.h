@@ -45,8 +45,13 @@
              hasTimestamp:(BOOL)hasTimestamp
           reuseIdentifier:(NSString *)reuseIdentifier;
 
+- (id)initWithBubbleStyle:(JSBubbleMessageStyle)style
+             hasSpeakerLabel:(BOOL)hasSpeakerLabel
+          reuseIdentifier:(NSString *)reuseIdentifier;
+
 #pragma mark - Message Cell
 - (void)setMessage:(NSString *)msg;
 - (void)setTimestamp:(NSDate *)date;
+- (void)setSpeaker:(NSString*) name;
 
 @end

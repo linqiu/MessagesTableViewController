@@ -40,4 +40,8 @@
     return [UIColor colorWithRed:0.533f green:0.573f blue:0.647f alpha:1.0f];
 }
 
++ (UIColor *)messagesSpeakerColor
+{
+    return [UIColor colorWithRed:0.233f green:0.273f blue:0.647f alpha:1.0f];
+}
 @end
