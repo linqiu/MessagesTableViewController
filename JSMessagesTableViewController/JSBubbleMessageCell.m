@@ -126,85 +126,32 @@
     [self.contentView bringSubviewToFront:self.speakerLabel];
 }
 
-- (void)configureWithStyle:(JSBubbleMessageStyle)style timestamp:(BOOL)hasTimestamp
+
+- (void)configureWithStyle:(JSBubbleMessageStyle)style speakerLabel:(BOOL)hasSpeakerLabel timeStamp:(BOOL)hasTimestamp
 {
     CGFloat bubbleY = 0.0f;
+    CGFloat bubbleheight = 0.0f;
     
-    if(hasTimestamp) {
-        [self configureTimestampLabel];
-        bubbleY = 14.0f;
-    }
-    
-    CGRect frame = CGRectMake(0.0f,
-                              bubbleY,
-                              self.contentView.frame.size.width,
-                              self.contentView.frame.size.height - self.timestampLabel.frame.size.height);
-    
-    self.bubbleView = [[JSBubbleView alloc] initWithFrame:frame
-                                              bubbleStyle:style];
-    
-    self.bubbleView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    
-    [self.contentView addSubview:self.bubbleView];
-    [self.contentView sendSubviewToBack:self.bubbleView];
-}
-- (id)initWithBubbleStyle:(JSBubbleMessageStyle)style hasTimestamp:(BOOL)hasTimestamp reuseIdentifier:(NSString *)reuseIdentifier
-{
-    self = [super initWithStyle:UITableViewCellStyleDefault reuseIdentifier:reuseIdentifier];
-    if(self) {
-        [self setup];
-        [self configureWithStyle:style timestamp:hasTimestamp];
-    }
-    return self;
-}
-
-
-- (void)configureWithStyle:(JSBubbleMessageStyle)style speakerLabel:(BOOL)hasSpeakerLabel
-{
-    CGFloat bubbleY = 0.0f;
-    
-    if(hasSpeakerLabel) {
+    if(!hasTimestamp && hasSpeakerLabel) {
         [self configureSpeakerLabel];
         bubbleY = 14.0f;
+        bubbleheight = 14.5f;
     }
-    
-    CGRect frame = CGRectMake(0.0f,
-                              bubbleY,
-                              self.contentView.frame.size.width,
-                              self.contentView.frame.size.height - self.speakerLabel.frame.size.height);
-    
-    self.bubbleView = [[JSBubbleView alloc] initWithFrame:frame
-                                              bubbleStyle:style];
-    
-    self.bubbleView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    
-    [self.contentView addSubview:self.bubbleView];
-    [self.contentView sendSubviewToBack:self.bubbleView];
-}
-
-- (id)initWithBubbleStyle:(JSBubbleMessageStyle)style hasSpeakerLabel:(BOOL)hasSpeakerLabel reuseIdentifier:(NSString *)reuseIdentifier
-{
-    self = [super initWithStyle:UITableViewCellStyleDefault reuseIdentifier:reuseIdentifier];
-    if(self) {
-        [self setup];
-        [self configureWithStyle:style speakerLabel:hasSpeakerLabel];
+    else if (hasTimestamp && !hasSpeakerLabel) {
+        [self configureTimestampLabel];
+        bubbleY = 14.0f;
+        bubbleheight = 14.5f;
     }
-    return self;
-}
-
-- (void)configureWithStyle:(JSBubbleMessageStyle)style bothLabel:(BOOL)hasSpeakerLabel
-{
-    CGFloat bubbleY = 0.0f;
-    
-    if(hasSpeakerLabel) {
+    else if(hasTimestamp && hasSpeakerLabel) {
         [self configureBothLabel];
         bubbleY = 28.0f;
+        bubbleheight = 29.0f;
     }
     
     CGRect frame = CGRectMake(0.0f,
                               bubbleY,
                               self.contentView.frame.size.width,
-                              self.contentView.frame.size.height - self.speakerLabel.frame.size.height - self.timestampLabel.frame.size.height);
+                              self.contentView.frame.size.height - bubbleheight);
     
     self.bubbleView = [[JSBubbleView alloc] initWithFrame:frame
                                               bubbleStyle:style];
@@ -215,12 +162,12 @@
     [self.contentView sendSubviewToBack:self.bubbleView];
 }
 
-- (id)initWithBubbleStyle:(JSBubbleMessageStyle)style hasBothLabel:(BOOL)hasSpeakerLabel reuseIdentifier:(NSString *)reuseIdentifier
+- (id)initWithBubbleStyle:(JSBubbleMessageStyle)style hasTimestamp:(BOOL)hasTimestamp hasSpeakerLabel:(BOOL)hasSpeakerLabel reuseIdentifier:(NSString *)reuseIdentifier
 {
     self = [super initWithStyle:UITableViewCellStyleDefault reuseIdentifier:reuseIdentifier];
     if(self) {
         [self setup];
-        [self configureWithStyle:style bothLabel:hasSpeakerLabel];
+        [self configureWithStyle:style speakerLabel:hasSpeakerLabel timeStamp:hasTimestamp];
     }
     return self;
 }

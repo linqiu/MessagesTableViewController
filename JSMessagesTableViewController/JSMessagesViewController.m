@@ -181,20 +181,24 @@
     if(!cell || !cellSpeaker || !cellSpeakerTimestamp) {
         cell = [[JSBubbleMessageCell alloc] initWithBubbleStyle:style
                                                    hasTimestamp:hasTimestamp
+                                                hasSpeakerLabel:hasSpeakerLabel
                                                 reuseIdentifier:CellID];
         
         if (hasTimestamp && !hasSpeakerLabel)
             cell = [[JSBubbleMessageCell alloc] initWithBubbleStyle:style
                                                        hasTimestamp:hasTimestamp
+                                                    hasSpeakerLabel:hasSpeakerLabel
                                                     reuseIdentifier:CellID];
         if (!hasTimestamp && hasSpeakerLabel)
             cellSpeaker = [[JSBubbleMessageCell alloc] initWithBubbleStyle:style
-                                                       hasSpeakerLabel:hasSpeakerLabel
-                                                    reuseIdentifier:SpeakerID];
+                                                              hasTimestamp:hasTimestamp
+                                                           hasSpeakerLabel:hasSpeakerLabel
+                                                           reuseIdentifier:SpeakerID];
         if (hasTimestamp && hasSpeakerLabel)
             cellSpeakerTimestamp = [[JSBubbleMessageCell alloc] initWithBubbleStyle:style
-                                                           hasBothLabel:YES
-                                                           reuseIdentifier:CellSpeakerID];
+                                                                       hasTimestamp:hasTimestamp
+                                                                    hasSpeakerLabel:hasSpeakerLabel
+                                                                    reuseIdentifier:CellSpeakerID];
     }
     
     if(hasTimestamp && !hasSpeakerLabel) {
