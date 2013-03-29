@@ -89,10 +89,10 @@
     [self.contentView bringSubviewToFront:self.timestampLabel];
 }
 
-- (void)configureSpeakerLabel
+- (void)configureSpeakerLabel:(CGFloat) yPosition
 {
     self.speakerLabel = [[UILabel alloc] initWithFrame:CGRectMake(10.0f,
-                                                                    4.0f,
+                                                                    yPosition,
                                                                     [UIScreen mainScreen].bounds.size.width,
                                                                     14.5f)];
     self.speakerLabel.autoresizingMask =  UIViewAutoresizingNone;
@@ -110,20 +110,7 @@
 - (void)configureBothLabel
 {
     [self configureTimestampLabel];
-    self.speakerLabel = [[UILabel alloc] initWithFrame:CGRectMake(10.0f,
-                                                                  18.0f,
-                                                                  [UIScreen mainScreen].bounds.size.width,
-                                                                  14.5f)];
-    self.speakerLabel.autoresizingMask =  UIViewAutoresizingNone;
-    self.speakerLabel.backgroundColor = [UIColor clearColor];
-    self.speakerLabel.textAlignment = NSTextAlignmentLeft;
-    self.speakerLabel.textColor = [UIColor messagesSpeakerColor];
-    self.speakerLabel.shadowColor = [UIColor whiteColor];
-    self.speakerLabel.shadowOffset = CGSizeMake(0.0f, 1.0f);
-    self.speakerLabel.font = [UIFont boldSystemFontOfSize:11.5f];
-    
-    [self.contentView addSubview:self.speakerLabel];
-    [self.contentView bringSubviewToFront:self.speakerLabel];
+    [self configureSpeakerLabel:18.0f];
 }
 
 
@@ -133,7 +120,7 @@
     CGFloat bubbleheight = 0.0f;
     
     if(!hasTimestamp && hasSpeakerLabel) {
-        [self configureSpeakerLabel];
+        [self configureSpeakerLabel:4.0f];
         bubbleY = 14.0f;
         bubbleheight = 14.5f;
     }
