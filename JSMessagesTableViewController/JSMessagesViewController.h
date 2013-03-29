@@ -48,17 +48,19 @@ typedef enum {
     JSMessagesViewTimestampPolicyCustom
 } JSMessagesViewTimestampPolicy;
 
+
 typedef enum {
-    JSMessageViewSpeakerPolicyEveryoneButMe = 0,
-    JSMessageViewSpeakerPolicyEveryone
+    JSMessageViewSpeakerPolicyShowOthers = 0,
+    JSMessageViewSpeakerPolicyDoNotShowMe
 } JSMessageViewSpeakerPolicy;
+
 
 @protocol JSMessagesViewDelegate <NSObject>
 @required
 - (void)sendPressed:(UIButton *)sender withText:(NSString *)text;
 - (JSBubbleMessageStyle)messageStyleForRowAtIndexPath:(NSIndexPath *)indexPath;
 - (JSMessagesViewTimestampPolicy)timestampPolicyForMessagesView;
-- (JSMessageViewSpeakerPolicy) speakerPolicyForMessagesView;
+- (JSMessageViewSpeakerPolicy) speakerPolicyForMessagesView:(NSIndexPath *)indexPath;
 - (BOOL)hasTimestampForRowAtIndexPath:(NSIndexPath *)indexPath;
 - (BOOL)hasSpeakerForRowAtIndexPath:(NSIndexPath *)indexPath;
 @end

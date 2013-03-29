@@ -47,6 +47,7 @@
 - (void)configureSpeakerLabel;
 - (void)configureWithStyle:(JSBubbleMessageStyle)style timestamp:(BOOL)hasTimestamp;
 - (void)configureWithStyle:(JSBubbleMessageStyle)style speakerLabel:(BOOL)hasSpeakerLabel;
+- (void)configureWithStyle:(JSBubbleMessageStyle)style bothLabel:(BOOL)hasSpeakerLabel;
 
 @end
 
@@ -90,7 +91,7 @@
 
 - (void)configureSpeakerLabel
 {
-    self.speakerLabel = [[UILabel alloc] initWithFrame:CGRectMake(0.0f,
+    self.speakerLabel = [[UILabel alloc] initWithFrame:CGRectMake(10.0f,
                                                                     4.0f,
                                                                     [UIScreen mainScreen].bounds.size.width,
                                                                     14.5f)];
@@ -108,8 +109,9 @@
 
 - (void)configureBothLabel
 {
-    self.speakerLabel = [[UILabel alloc] initWithFrame:CGRectMake(0.0f,
-                                                                  18.5f,
+    [self configureTimestampLabel];
+    self.speakerLabel = [[UILabel alloc] initWithFrame:CGRectMake(10.0f,
+                                                                  18.0f,
                                                                   [UIScreen mainScreen].bounds.size.width,
                                                                   14.5f)];
     self.speakerLabel.autoresizingMask =  UIViewAutoresizingNone;
@@ -122,21 +124,6 @@
     
     [self.contentView addSubview:self.speakerLabel];
     [self.contentView bringSubviewToFront:self.speakerLabel];
-    
-    self.timestampLabel = [[UILabel alloc] initWithFrame:CGRectMake(0.0f,
-                                                                    4.0f,
-                                                                    [UIScreen mainScreen].bounds.size.width,
-                                                                    14.5f)];
-    self.timestampLabel.autoresizingMask =  UIViewAutoresizingNone;
-    self.timestampLabel.backgroundColor = [UIColor clearColor];
-    self.timestampLabel.textAlignment = NSTextAlignmentCenter;
-    self.timestampLabel.textColor = [UIColor messagesTimestampColor];
-    self.timestampLabel.shadowColor = [UIColor whiteColor];
-    self.timestampLabel.shadowOffset = CGSizeMake(0.0f, 1.0f);
-    self.timestampLabel.font = [UIFont boldSystemFontOfSize:11.5f];
-    
-    [self.contentView addSubview:self.timestampLabel];
-    [self.contentView bringSubviewToFront:self.timestampLabel];
 }
 
 - (void)configureWithStyle:(JSBubbleMessageStyle)style timestamp:(BOOL)hasTimestamp
@@ -210,7 +197,7 @@
     CGFloat bubbleY = 0.0f;
     
     if(hasSpeakerLabel) {
-        [self configureSpeakerLabel];
+        [self configureBothLabel];
         bubbleY = 28.0f;
     }
     

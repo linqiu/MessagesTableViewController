@@ -167,39 +167,43 @@
     JSBubbleMessageStyle style = [self.delegate messageStyleForRowAtIndexPath:indexPath];
     BOOL hasTimestamp = [self shouldHaveTimestampForRowAtIndexPath:indexPath];
     BOOL hasSpeakerLabel = [self shouldHaveSpeakerForRowAtIndexPath:indexPath];
-    NSLog(@"speakerlabel? %s", hasSpeakerLabel? "true":"false");
     
     NSString *CellID = [NSString stringWithFormat:@"MessageCell_%d_%d", style, hasTimestamp];
     NSString *SpeakerID = [NSString stringWithFormat:@"MessageSpeakerCell_%d_%d", style, hasSpeakerLabel];
     NSString *CellSpeakerID = [NSString stringWithFormat:@"MessageCellSpeakerCell_%d_%d", style, hasSpeakerLabel];
-
-    JSBubbleMessageCell *cellSpeakerTimestamp = (JSBubbleMessageCell *)[tableView dequeueReusableCellWithIdentifier:CellSpeakerID];       
+    
+    
+    
     JSBubbleMessageCell *cell = (JSBubbleMessageCell *)[tableView dequeueReusableCellWithIdentifier:CellID];
     JSBubbleMessageCell *cellSpeaker = (JSBubbleMessageCell *)[tableView dequeueReusableCellWithIdentifier:SpeakerID];
+    JSBubbleMessageCell *cellSpeakerTimestamp = (JSBubbleMessageCell *)[tableView dequeueReusableCellWithIdentifier:CellSpeakerID];
     
     if(!cell || !cellSpeaker || !cellSpeakerTimestamp) {
-        if (hasTimestamp)
+        cell = [[JSBubbleMessageCell alloc] initWithBubbleStyle:style
+                                                   hasTimestamp:hasTimestamp
+                                                reuseIdentifier:CellID];
+        
+        if (hasTimestamp && !hasSpeakerLabel)
             cell = [[JSBubbleMessageCell alloc] initWithBubbleStyle:style
                                                        hasTimestamp:hasTimestamp
                                                     reuseIdentifier:CellID];
-        if (hasSpeakerLabel)
+        if (!hasTimestamp && hasSpeakerLabel)
             cellSpeaker = [[JSBubbleMessageCell alloc] initWithBubbleStyle:style
                                                        hasSpeakerLabel:hasSpeakerLabel
                                                     reuseIdentifier:SpeakerID];
         if (hasTimestamp && hasSpeakerLabel)
             cellSpeakerTimestamp = [[JSBubbleMessageCell alloc] initWithBubbleStyle:style
-                                                           hasBothLabel:hasSpeakerLabel
-                                                           reuseIdentifier:SpeakerID];
+                                                           hasBothLabel:YES
+                                                           reuseIdentifier:CellSpeakerID];
     }
     
-    if(hasTimestamp) {
+    if(hasTimestamp && !hasSpeakerLabel) {
         [cell setTimestamp:[self.dataSource timestampForRowAtIndexPath:indexPath]];
         [cell setMessage:[self.dataSource textForRowAtIndexPath:indexPath]];
         [cell setBackgroundColor:tableView.backgroundColor];
         return cell;
     }
-    
-    else if(hasSpeakerLabel) {
+    else if(hasSpeakerLabel && !hasTimestamp) {
         [cellSpeaker setSpeaker:[self.dataSource speakerNameForRowAtIndexPath:indexPath]];
         [cellSpeaker setMessage:[self.dataSource textForRowAtIndexPath:indexPath]];
         [cellSpeaker setBackgroundColor:tableView.backgroundColor];
@@ -212,13 +216,10 @@
         [cellSpeakerTimestamp setBackgroundColor:tableView.backgroundColor];
         return cellSpeakerTimestamp;
     }
-    else {
-        [cell setMessage:[self.dataSource textForRowAtIndexPath:indexPath]];
-        [cell setBackgroundColor:tableView.backgroundColor];
-        return cell;
-    }
-   
     
+    [cell setMessage:[self.dataSource textForRowAtIndexPath:indexPath]];
+    [cell setBackgroundColor:tableView.backgroundColor];
+    return cell;
     
 }
 
@@ -233,15 +234,14 @@
 #pragma mark - Messages view controller
 - (BOOL)shouldHaveSpeakerForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    switch ([self.delegate speakerPolicyForMessagesView]) {
-        case JSMessageViewSpeakerPolicyEveryoneButMe:
+    switch ([self.delegate speakerPolicyForMessagesView:indexPath]) {
+        case JSMessageViewSpeakerPolicyShowOthers:
             return YES;
             break;
-        case JSMessageViewSpeakerPolicyEveryone:
+        case JSMessageViewSpeakerPolicyDoNotShowMe:
             return NO;
             break;
     }
-    
     return NO;
 }
 
