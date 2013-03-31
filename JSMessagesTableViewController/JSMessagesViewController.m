@@ -32,6 +32,7 @@
 //  IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE
 //  OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
+#import <SDWebImage/UIImageView+WebCache.h>
 
 #import "JSMessagesViewController.h"
 #import "NSString+JSMessagesView.h"
@@ -167,6 +168,9 @@
     JSBubbleMessageStyle style = [self.delegate messageStyleForRowAtIndexPath:indexPath];
     BOOL hasTimestamp = [self shouldHaveTimestampForRowAtIndexPath:indexPath];
     BOOL hasSpeakerLabel = [self shouldHaveSpeakerForRowAtIndexPath:indexPath];
+    BOOL hasImageAttachment = [self shouldHaveImageAttachmentForRowAtIndexPath:indexPath];
+    
+    NSLog(@"image attachment? %s, indexPath: %d", hasImageAttachment? "yes": "no", indexPath.row);
     
     NSString *CellID = [NSString stringWithFormat:@"MessageCell_%d_%d", style, hasTimestamp];
     NSString *SpeakerID = [NSString stringWithFormat:@"MessageSpeakerCell_%d_%d", style, hasSpeakerLabel];
@@ -177,6 +181,8 @@
     JSBubbleMessageCell *cell = (JSBubbleMessageCell *)[tableView dequeueReusableCellWithIdentifier:CellID];
     JSBubbleMessageCell *cellSpeaker = (JSBubbleMessageCell *)[tableView dequeueReusableCellWithIdentifier:SpeakerID];
     JSBubbleMessageCell *cellSpeakerTimestamp = (JSBubbleMessageCell *)[tableView dequeueReusableCellWithIdentifier:CellSpeakerID];
+    
+    
     
     if(!cell || !cellSpeaker || !cellSpeakerTimestamp) {
         cell = [[JSBubbleMessageCell alloc] initWithBubbleStyle:style
@@ -200,6 +206,16 @@
                                                                     hasSpeakerLabel:hasSpeakerLabel
                                                                     reuseIdentifier:CellSpeakerID];
     }
+    
+    if (hasImageAttachment) {
+
+        [cell.imageView setImageWithURL:[NSURL URLWithString:[self.dataSource imageUrlForRowAtIndex:indexPath]]
+                       placeholderImage:[UIImage imageNamed:@"placeholder.png"]
+                              completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
+                                  NSLog(@"image: %@, error: %@, cacheType: %u", image, error, cacheType);
+                              }];
+    }
+    
     
     if(hasTimestamp && !hasSpeakerLabel) {
         [cell setTimestamp:[self.dataSource timestampForRowAtIndexPath:indexPath]];
@@ -244,6 +260,18 @@
             break;
         case JSMessageViewSpeakerPolicyDoNotShowMe:
             return NO;
+            break;
+    }
+    return NO;
+}
+
+- (BOOL) shouldHaveImageAttachmentForRowAtIndexPath:(NSIndexPath *) indexPath {
+    switch ([self.delegate imageAttachmentPolicyForMessagesView:indexPath]) {
+        case JSMessageViewImageAttachmentPolicyNoImage:
+            return NO;
+            break;
+        case JSMessageViewImageAttachmentPolicyYesImage:
+            return YES;
             break;
     }
     return NO;

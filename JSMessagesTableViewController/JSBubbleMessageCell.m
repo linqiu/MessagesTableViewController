@@ -41,13 +41,15 @@
 @property (strong, nonatomic) JSBubbleView *bubbleView;
 @property (strong, nonatomic) UILabel *timestampLabel;
 @property (strong, nonatomic) UILabel *speakerLabel;
+@property (strong, nonatomic) UIImage *imageAttachment;
 
 - (void)setup;
 - (void)configureTimestampLabel;
-- (void)configureSpeakerLabel;
-- (void)configureWithStyle:(JSBubbleMessageStyle)style timestamp:(BOOL)hasTimestamp;
-- (void)configureWithStyle:(JSBubbleMessageStyle)style speakerLabel:(BOOL)hasSpeakerLabel;
-- (void)configureWithStyle:(JSBubbleMessageStyle)style bothLabel:(BOOL)hasSpeakerLabel;
+- (void)configureSpeakerLabel:(CGFloat) yPosition;
+- (void)configureImage;
+- (void)configureWithStyle:(JSBubbleMessageStyle)style
+              speakerLabel:(BOOL)hasSpeakerLabel
+                 timeStamp:(BOOL)hasTimestamp;
 
 @end
 
@@ -105,6 +107,9 @@
     
     [self.contentView addSubview:self.speakerLabel];
     [self.contentView bringSubviewToFront:self.speakerLabel];
+}
+
+- (void)configureImage {
 }
 
 - (void)configureBothLabel

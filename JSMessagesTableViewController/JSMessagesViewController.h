@@ -54,6 +54,10 @@ typedef enum {
     JSMessageViewSpeakerPolicyDoNotShowMe
 } JSMessageViewSpeakerPolicy;
 
+typedef enum {
+    JSMessageViewImageAttachmentPolicyYesImage = 0,
+    JSMessageViewImageAttachmentPolicyNoImage
+} JSMessageViewImageAttachment;
 
 @protocol JSMessagesViewDelegate <NSObject>
 @required
@@ -61,6 +65,7 @@ typedef enum {
 - (JSBubbleMessageStyle)messageStyleForRowAtIndexPath:(NSIndexPath *)indexPath;
 - (JSMessagesViewTimestampPolicy)timestampPolicyForMessagesView;
 - (JSMessageViewSpeakerPolicy) speakerPolicyForMessagesView:(NSIndexPath *)indexPath;
+- (JSMessageViewImageAttachment) imageAttachmentPolicyForMessagesView:(NSIndexPath*) indexPath;
 - (BOOL)hasTimestampForRowAtIndexPath:(NSIndexPath *)indexPath;
 - (BOOL)hasSpeakerForRowAtIndexPath:(NSIndexPath *)indexPath;
 @end
@@ -72,6 +77,7 @@ typedef enum {
 - (NSString *)textForRowAtIndexPath:(NSIndexPath *)indexPath;
 - (NSDate *)timestampForRowAtIndexPath:(NSIndexPath *)indexPath;
 - (NSString *)speakerNameForRowAtIndexPath:(NSIndexPath *) indexPath;
+- (NSString *) imageUrlForRowAtIndex:(NSIndexPath *) indexPath;
 @end
 
 
@@ -94,6 +100,7 @@ typedef enum {
 #pragma mark - Messages view controller
 - (BOOL)shouldHaveTimestampForRowAtIndexPath:(NSIndexPath *)indexPath;
 - (BOOL)shouldHaveSpeakerForRowAtIndexPath:(NSIndexPath *)indexPath;
+- (BOOL)shouldHaveImageAttachmentForRowAtIndexPath:(NSIndexPath *)indexPath;
 - (void)finishSend;
 - (void)setBackgroundColor:(UIColor *)color;
 - (void)scrollToBottomAnimated:(BOOL)animated;
