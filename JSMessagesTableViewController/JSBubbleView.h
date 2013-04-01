@@ -45,11 +45,11 @@ typedef enum {
 
 
 
-@interface JSBubbleView : UIView
+@interface JSBubbleView : UIView <UIGestureRecognizerDelegate>
 
 @property (assign, nonatomic) JSBubbleMessageStyle style;
 @property (copy, nonatomic) NSString *text;
-@property (retain, nonatomic) UIImage *attachment;
+@property (retain, nonatomic) UIImageView *attachmentView;
 
 #pragma mark - Initialization
 - (id)initWithFrame:(CGRect)frame bubbleStyle:(JSBubbleMessageStyle)bubbleStyle;

@@ -203,7 +203,7 @@
 
 - (void)setPicture:(UIImage *) picture
 {
-    self.bubbleView.attachment = picture;
+    self.bubbleView.attachmentView = [[UIImageView alloc] initWithImage:picture];
 }
 
 

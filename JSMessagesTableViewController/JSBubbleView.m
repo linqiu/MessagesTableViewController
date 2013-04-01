@@ -57,7 +57,7 @@
 
 @synthesize style;
 @synthesize text;
-@synthesize attachment;
+@synthesize attachmentView;
 
 #pragma mark - Initialization
 - (void)setup
@@ -90,9 +90,9 @@
     [self setNeedsDisplay];
 }
 
-- (void)setAttachment:(UIImage *)newAttachment
+- (void)setAttachmentView:(UIImageView *)newAttachment
 {
-    attachment = newAttachment;
+    attachmentView = newAttachment;
     [self setNeedsDisplay];
 }
 
@@ -100,7 +100,7 @@
 - (void)drawRect:(CGRect)frame
 {
 	UIImage *image = [JSBubbleView bubbleImageForStyle:self.style];
-    CGSize imageSize = [JSBubbleView imageSizeForImage:self.attachment];
+    CGSize imageSize = [JSBubbleView imageSizeForImage:self.attachmentView.image];
     CGSize bubbleSize = [JSBubbleView bubbleSizeForText:self.text];
     
     CGFloat bubbleHeight = 0.0f;
@@ -131,7 +131,16 @@
                                    bubbleSize.height + kMarginTop,
                                    imageSize.width,
                                    imageSize.height);
-    [self.attachment drawInRect:imageFrame];
+    self.attachmentView.frame = imageFrame;
+    [self.attachmentView.image drawInRect:imageFrame];
+    
+    self.attachmentView.userInteractionEnabled = YES;
+
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap:)];
+    [tap setNumberOfTapsRequired:1];
+    
+    [self.attachmentView addGestureRecognizer: tap];
+    tap.delegate = self; 
 	
 	CGSize textSize = [JSBubbleView textSizeForText:self.text];
 	CGFloat textX = (CGFloat)image.leftCapWidth - 3.0f + ([self styleIsOutgoing] ? bubbleFrame.origin.x : 0.0f);
@@ -259,9 +268,11 @@
     return ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPhone) ? 33 : 109;
 }
 
+
 + (int)numberOfLinesForMessage:(NSString *)txt
 {
     return (txt.length / [JSBubbleView maxCharactersPerLine]) + 1;
 }
+
 
 @end

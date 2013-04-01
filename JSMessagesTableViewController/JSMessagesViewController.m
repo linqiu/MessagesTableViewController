@@ -188,6 +188,7 @@
     BOOL hasTimestamp = [self shouldHaveTimestampForRowAtIndexPath:indexPath];
     BOOL hasSpeakerLabel = [self shouldHaveSpeakerForRowAtIndexPath:indexPath];
     BOOL hasImageAttachment = [self shouldHaveImageAttachmentForRowAtIndexPath:indexPath];
+
     
     NSLog(@"image attachment? %s, indexPath: %d", hasImageAttachment? "yes": "no", indexPath.row);
     
@@ -202,6 +203,13 @@
                                              hasImageAttachment:hasImageAttachment
                                                 reuseIdentifier:CellID];
     }
+    
+    cell.imageView.userInteractionEnabled = YES;
+    cell.imageView.tag = indexPath.row;
+
+    UITapGestureRecognizer *tapped = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap:)];
+    tapped.numberOfTapsRequired = 1;
+    [cell.imageView addGestureRecognizer:tapped];
     
     if (hasImageAttachment) {
         [cell.imageView setImageWithURL:[NSURL URLWithString:[self.dataSource imageUrlForRowAtIndex:indexPath]]
@@ -308,6 +316,27 @@
                                       animated:animated];
     }
 }
+
+-(void)myFunction :(id) sender
+{
+    UITapGestureRecognizer *gesture = (UITapGestureRecognizer *) sender;
+    NSLog(@"Tag = %d", gesture.view.tag);
+}
+
+//-(void) handleTap:(UITapGestureRecognizer *)recognizer {
+//    NSLog(@"SUP BRO, tapped it");
+//    
+//    if (recognizer.state == UIGestureRecognizerStateEnded) {
+//        //push your view controller
+//        
+//        UIImageView *img = (UIImageView *)[recognizer view];
+//        
+//        NSLog(@"SUP BRO, tapped it");
+//        //   [self performSegueWithIdentifier:@"toPictureView" sender:img];
+//        
+//    }
+//}
+
 
 #pragma mark - Text view delegate
 - (void)textViewDidBeginEditing:(UITextView *)textView
