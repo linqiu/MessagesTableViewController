@@ -49,8 +49,8 @@
 - (void)configureImage;
 - (void)configureWithStyle:(JSBubbleMessageStyle)style
               speakerLabel:(BOOL)hasSpeakerLabel
-                 timeStamp:(BOOL)hasTimestamp;
-
+                 timeStamp:(BOOL)hasTimestamp
+           imageAttachment:(BOOL)hasImage;
 @end
 
 

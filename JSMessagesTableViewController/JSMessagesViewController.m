@@ -190,7 +190,7 @@
     BOOL hasImageAttachment = [self shouldHaveImageAttachmentForRowAtIndexPath:indexPath];
 
     
-    NSLog(@"image attachment? %s, indexPath: %d", hasImageAttachment? "yes": "no", indexPath.row);
+//    NSLog(@"image attachment? %s, indexPath: %d", hasImageAttachment? "yes": "no", indexPath.row);
     
     NSString *CellID = [NSString stringWithFormat:@"MessageCell_%d_%d_%d_%d", style, hasTimestamp, hasSpeakerLabel, hasImageAttachment];
     
@@ -215,7 +215,7 @@
         [cell.imageView setImageWithURL:[NSURL URLWithString:[self.dataSource imageUrlForRowAtIndex:indexPath]]
                        placeholderImage:[UIImage imageNamed:@"placeholder.png"]
                               completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
-                                  NSLog(@"image: %@, error: %@, cacheType: %u", image, error, cacheType);
+                                  //NSLog(@"image: %@, error: %@, cacheType: %u", image, error, cacheType);
                                   [cell setPicture:image];
                               }];
     }
@@ -315,12 +315,6 @@
                               atScrollPosition:UITableViewScrollPositionBottom
                                       animated:animated];
     }
-}
-
--(void)myFunction :(id) sender
-{
-    UITapGestureRecognizer *gesture = (UITapGestureRecognizer *) sender;
-    NSLog(@"Tag = %d", gesture.view.tag);
 }
 
 //-(void) handleTap:(UITapGestureRecognizer *)recognizer {

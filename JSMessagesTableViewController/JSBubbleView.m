@@ -71,6 +71,13 @@
     if(self) {
         [self setup];
         self.style = bubbleStyle;
+        self.attachmentView.userInteractionEnabled = YES;
+        
+        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap:)];
+        [tap setNumberOfTapsRequired:1];
+        
+        [self.attachmentView addGestureRecognizer: tap];
+        tap.delegate = self;
         
     }
     return self;
@@ -113,14 +120,10 @@
     
     bubbleHeight = imageSize.height + bubbleSize.height;
     
-    NSLog(@"bubbleHeight: %f, image height; %f, bubble height: %f", bubbleHeight, imageSize.height, bubbleSize.height);
+//    NSLog(@"bubbleHeight: %f, image height; %f, bubble height: %f", bubbleHeight, imageSize.height, bubbleSize.height);
     
     
-//	CGRect bubbleFrame = CGRectMake(([self styleIsOutgoing] ? self.frame.size.width - bubbleSize.width : 0.0f),
-//                                    kMarginTop,
-//                                    bubbleWidth,
-//                                    bubbleHeight + kPaddingTop + kPaddingBottom);
-    CGRect bubbleFrame = CGRectMake(([self styleIsOutgoing] ? self.frame.size.width - bubbleSize.width : 0.0f),
+   CGRect bubbleFrame = CGRectMake(([self styleIsOutgoing] ? self.frame.size.width - bubbleSize.width : 0.0f),
                                     kMarginTop,
                                     bubbleSize.width,
                                     bubbleSize.height);
@@ -133,14 +136,6 @@
                                    imageSize.height);
     self.attachmentView.frame = imageFrame;
     [self.attachmentView.image drawInRect:imageFrame];
-    
-    self.attachmentView.userInteractionEnabled = YES;
-
-    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap:)];
-    [tap setNumberOfTapsRequired:1];
-    
-    [self.attachmentView addGestureRecognizer: tap];
-    tap.delegate = self; 
 	
 	CGSize textSize = [JSBubbleView textSizeForText:self.text];
 	CGFloat textX = (CGFloat)image.leftCapWidth - 3.0f + ([self styleIsOutgoing] ? bubbleFrame.origin.x : 0.0f);
@@ -154,29 +149,9 @@
             lineBreakMode:NSLineBreakByWordWrapping
                 alignment:NSTextAlignmentLeft];
     
-    
-//    UIImage *image = [JSBubbleView bubbleImageForStyle:self.style];
-//    CGSize bubbleSize = [JSBubbleView bubbleSizeForText:self.text];
-//	CGRect bubbleFrame = CGRectMake(([self styleIsOutgoing] ? self.frame.size.width - bubbleSize.width : 0.0f),
-//                                    kMarginTop,
-//                                    bubbleSize.width,
-//                                    bubbleSize.height);
-//    
-//	[image drawInRect:bubbleFrame];
-//    
-//	CGSize textSize = [JSBubbleView textSizeForText:self.text];
-//	CGFloat textX = (CGFloat)image.leftCapWidth - 3.0f + ([self styleIsOutgoing] ? bubbleFrame.origin.x : 0.0f);
-//    CGRect textFrame = CGRectMake(textX,
-//                                  kPaddingTop + kMarginTop,
-//                                  textSize.width,
-//                                  textSize.height);
-//    
-//	[self.text drawInRect:textFrame
-//                 withFont:[JSBubbleView font]
-//            lineBreakMode:NSLineBreakByWordWrapping
-//                alignment:NSTextAlignmentLeft];
-    
 }
+
+
 
 #pragma mark - Bubble view
 - (BOOL)styleIsOutgoing
@@ -258,7 +233,7 @@
     }
     else {
     }
-    NSLog(@"cellHeight: %f", [JSBubbleView bubbleSizeForText:txt].height +imageHeight + kMarginTop + kMarginBottom);
+   // NSLog(@"cellHeight: %f", [JSBubbleView bubbleSizeForText:txt].height +imageHeight + kMarginTop + kMarginBottom);
     
     return [JSBubbleView bubbleSizeForText:txt].height +imageHeight + kMarginTop + kMarginBottom;
 }
