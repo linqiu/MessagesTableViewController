@@ -39,6 +39,7 @@
 
 @property (strong, nonatomic) UITextView *textView;
 @property (strong, nonatomic) UIButton *sendButton;
+@property (strong, nonatomic) UIButton *attachImageButton;
 
 #pragma mark - Initialization
 - (id)initWithFrame:(CGRect)frame

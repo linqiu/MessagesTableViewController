@@ -49,6 +49,7 @@
 @implementation JSMessageInputView
 
 @synthesize sendButton;
+@synthesize attachImageButton;
 
 #pragma mark - Initialization
 - (id)initWithFrame:(CGRect)frame
@@ -77,7 +78,7 @@
     CGFloat width = ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPhone) ? 246.0f : 690.0f;
     CGFloat height = [JSMessageInputView textViewLineHeight];
     
-    self.textView = [[UITextView alloc] initWithFrame:CGRectMake(6.0f, 3.0f, width, height)];
+    self.textView = [[UITextView alloc] initWithFrame:CGRectMake(36.0f, 3.0f, width -30.f, height)];
     self.textView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     self.textView.backgroundColor = [UIColor whiteColor];
     self.textView.scrollIndicatorInsets = UIEdgeInsetsMake(10.0f, 0.0f, 10.0f, 8.0f);
@@ -93,7 +94,7 @@
     self.textView.returnKeyType = UIReturnKeyDefault;
     [self addSubview:self.textView];
 	
-    UIImageView *inputFieldBack = [[UIImageView alloc] initWithFrame:CGRectMake(self.textView.frame.origin.x - 1.0f,
+    UIImageView *inputFieldBack = [[UIImageView alloc] initWithFrame:CGRectMake(self.textView.frame.origin.x-1.0f,
                                                                                 0.0f,
                                                                                 self.textView.frame.size.width + 2.0f,
                                                                                 self.frame.size.height)];
@@ -111,6 +112,14 @@
     
     sendButton = btn;
     [self addSubview:self.sendButton];
+}
+
+- (void) setAttachImageButton:(UIButton *)imgBtn
+{
+    if(attachImageButton)
+        [attachImageButton removeFromSuperview];
+    attachImageButton = imgBtn;
+    [self addSubview:self.attachImageButton];
 }
 
 #pragma mark - Message input view

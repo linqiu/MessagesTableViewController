@@ -44,6 +44,7 @@
 - (id)initWithBubbleStyle:(JSBubbleMessageStyle)style
              hasTimestamp:(BOOL)hasTimestamp
            hasSpeakerLabel:(BOOL)hasSpeakerLabel
+       hasImageAttachment:(BOOL)hasImage
           reuseIdentifier:(NSString *)reuseIdentifier;
 
 
@@ -51,5 +52,6 @@
 - (void)setMessage:(NSString *)msg;
 - (void)setTimestamp:(NSDate *)date;
 - (void)setSpeaker:(NSString*) name;
+- (void)setPicture:(UIImage *)image;
 
 @end

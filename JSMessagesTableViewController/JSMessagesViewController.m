@@ -33,6 +33,7 @@
 //  OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 #import <SDWebImage/UIImageView+WebCache.h>
+#import <QuartzCore/QuartzCore.h>
 
 #import "JSMessagesViewController.h"
 #import "NSString+JSMessagesView.h"
@@ -74,7 +75,18 @@
     [sendButton addTarget:self
                    action:@selector(sendPressed:)
          forControlEvents:UIControlEventTouchUpInside];
+    
     [self.inputView setSendButton:sendButton];
+    
+    UIButton *imageButton = [self attachImageButton];
+    imageButton.enabled = YES;
+    [imageButton addTarget:self
+                    action:@selector(attachImage:)
+          forControlEvents:UIControlEventTouchUpInside];
+    
+    [self.inputView setAttachImageButton:imageButton];
+    
+
     [self.view addSubview:self.inputView];
     
     UISwipeGestureRecognizer *swipe = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(handleSwipe:)];
@@ -87,6 +99,7 @@
 {
     return [UIButton defaultSendButton];
 }
+
 
 #pragma mark - View lifecycle
 - (void)viewDidLoad
@@ -152,6 +165,12 @@
     [self.inputView.textView resignFirstResponder];
 }
 
+- (void)attachImage:(UIButton *)sender
+{
+    [self.delegate attachImage:sender];
+}
+
+
 #pragma mark - Table view data source
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
@@ -172,69 +191,33 @@
     
     NSLog(@"image attachment? %s, indexPath: %d", hasImageAttachment? "yes": "no", indexPath.row);
     
-    NSString *CellID = [NSString stringWithFormat:@"MessageCell_%d_%d", style, hasTimestamp];
-    NSString *SpeakerID = [NSString stringWithFormat:@"MessageSpeakerCell_%d_%d", style, hasSpeakerLabel];
-    NSString *CellSpeakerID = [NSString stringWithFormat:@"MessageCellSpeakerCell_%d_%d", style, hasSpeakerLabel];
-    
-    
+    NSString *CellID = [NSString stringWithFormat:@"MessageCell_%d_%d_%d_%d", style, hasTimestamp, hasSpeakerLabel, hasImageAttachment];
     
     JSBubbleMessageCell *cell = (JSBubbleMessageCell *)[tableView dequeueReusableCellWithIdentifier:CellID];
-    JSBubbleMessageCell *cellSpeaker = (JSBubbleMessageCell *)[tableView dequeueReusableCellWithIdentifier:SpeakerID];
-    JSBubbleMessageCell *cellSpeakerTimestamp = (JSBubbleMessageCell *)[tableView dequeueReusableCellWithIdentifier:CellSpeakerID];
     
-    
-    
-    if(!cell || !cellSpeaker || !cellSpeakerTimestamp) {
+    if(!cell) {
         cell = [[JSBubbleMessageCell alloc] initWithBubbleStyle:style
                                                    hasTimestamp:hasTimestamp
                                                 hasSpeakerLabel:hasSpeakerLabel
+                                             hasImageAttachment:hasImageAttachment
                                                 reuseIdentifier:CellID];
-        
-        if (hasTimestamp && !hasSpeakerLabel)
-            cell = [[JSBubbleMessageCell alloc] initWithBubbleStyle:style
-                                                       hasTimestamp:hasTimestamp
-                                                    hasSpeakerLabel:hasSpeakerLabel
-                                                    reuseIdentifier:CellID];
-        if (!hasTimestamp && hasSpeakerLabel)
-            cellSpeaker = [[JSBubbleMessageCell alloc] initWithBubbleStyle:style
-                                                              hasTimestamp:hasTimestamp
-                                                           hasSpeakerLabel:hasSpeakerLabel
-                                                           reuseIdentifier:SpeakerID];
-        if (hasTimestamp && hasSpeakerLabel)
-            cellSpeakerTimestamp = [[JSBubbleMessageCell alloc] initWithBubbleStyle:style
-                                                                       hasTimestamp:hasTimestamp
-                                                                    hasSpeakerLabel:hasSpeakerLabel
-                                                                    reuseIdentifier:CellSpeakerID];
     }
     
     if (hasImageAttachment) {
-
         [cell.imageView setImageWithURL:[NSURL URLWithString:[self.dataSource imageUrlForRowAtIndex:indexPath]]
                        placeholderImage:[UIImage imageNamed:@"placeholder.png"]
                               completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
                                   NSLog(@"image: %@, error: %@, cacheType: %u", image, error, cacheType);
+                                  [cell setPicture:image];
                               }];
     }
     
-    
-    if(hasTimestamp && !hasSpeakerLabel) {
+    if(hasTimestamp) {
         [cell setTimestamp:[self.dataSource timestampForRowAtIndexPath:indexPath]];
-        [cell setMessage:[self.dataSource textForRowAtIndexPath:indexPath]];
-        [cell setBackgroundColor:tableView.backgroundColor];
-        return cell;
     }
-    else if(hasSpeakerLabel && !hasTimestamp) {
-        [cellSpeaker setSpeaker:[self.dataSource speakerNameForRowAtIndexPath:indexPath]];
-        [cellSpeaker setMessage:[self.dataSource textForRowAtIndexPath:indexPath]];
-        [cellSpeaker setBackgroundColor:tableView.backgroundColor];
-        return cellSpeaker;
-    }
-    else if(hasTimestamp && hasSpeakerLabel) {
-        [cellSpeakerTimestamp setTimestamp:[self.dataSource timestampForRowAtIndexPath:indexPath]];
-        [cellSpeakerTimestamp setSpeaker:[self.dataSource speakerNameForRowAtIndexPath:indexPath]];
-        [cellSpeakerTimestamp setMessage:[self.dataSource textForRowAtIndexPath:indexPath]];
-        [cellSpeakerTimestamp setBackgroundColor:tableView.backgroundColor];
-        return cellSpeakerTimestamp;
+    
+    if(hasSpeakerLabel) {
+        [cell setSpeaker:[self.dataSource speakerNameForRowAtIndexPath:indexPath]];
     }
     
     [cell setMessage:[self.dataSource textForRowAtIndexPath:indexPath]];

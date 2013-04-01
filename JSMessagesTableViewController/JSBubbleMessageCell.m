@@ -41,7 +41,7 @@
 @property (strong, nonatomic) JSBubbleView *bubbleView;
 @property (strong, nonatomic) UILabel *timestampLabel;
 @property (strong, nonatomic) UILabel *speakerLabel;
-@property (strong, nonatomic) UIImage *imageAttachment;
+@property (strong, nonatomic) UIImageView *imageAttachment;
 
 - (void)setup;
 - (void)configureTimestampLabel;
@@ -109,17 +109,10 @@
     [self.contentView bringSubviewToFront:self.speakerLabel];
 }
 
-- (void)configureImage {
-}
-
-- (void)configureBothLabel
-{
-    [self configureTimestampLabel];
-    [self configureSpeakerLabel:18.0f];
-}
-
-
-- (void)configureWithStyle:(JSBubbleMessageStyle)style speakerLabel:(BOOL)hasSpeakerLabel timeStamp:(BOOL)hasTimestamp
+- (void)configureWithStyle:(JSBubbleMessageStyle)style
+              speakerLabel:(BOOL)hasSpeakerLabel
+                 timeStamp:(BOOL)hasTimestamp
+           imageAttachment:(BOOL)hasImage
 {
     CGFloat bubbleY = 0.0f;
     CGFloat bubbleheight = 0.0f;
@@ -135,9 +128,15 @@
         bubbleheight = 14.5f;
     }
     else if(hasTimestamp && hasSpeakerLabel) {
-        [self configureBothLabel];
+        [self configureSpeakerLabel:18.0f];
+        [self configureTimestampLabel];
         bubbleY = 28.0f;
         bubbleheight = 29.0f;
+    }
+    
+    if(hasImage) {
+       // bubbleY += 50.0f;
+       // bubbleheight += 70.0f;
     }
     
     CGRect frame = CGRectMake(0.0f,
@@ -145,21 +144,34 @@
                               self.contentView.frame.size.width,
                               self.contentView.frame.size.height - bubbleheight);
     
+    
     self.bubbleView = [[JSBubbleView alloc] initWithFrame:frame
                                               bubbleStyle:style];
     
     self.bubbleView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     
+//    CGRect newFrame = self.contentView.frame;
+//    
+//    newFrame.size.height += self.bubbleView.frame.size.height;
+//    
+//    [self.contentView setFrame:newFrame];
     [self.contentView addSubview:self.bubbleView];
     [self.contentView sendSubviewToBack:self.bubbleView];
 }
 
-- (id)initWithBubbleStyle:(JSBubbleMessageStyle)style hasTimestamp:(BOOL)hasTimestamp hasSpeakerLabel:(BOOL)hasSpeakerLabel reuseIdentifier:(NSString *)reuseIdentifier
+- (id)initWithBubbleStyle:(JSBubbleMessageStyle)style
+             hasTimestamp:(BOOL)hasTimestamp
+          hasSpeakerLabel:(BOOL)hasSpeakerLabel
+       hasImageAttachment:(BOOL)hasImage
+          reuseIdentifier:(NSString *)reuseIdentifier
 {
     self = [super initWithStyle:UITableViewCellStyleDefault reuseIdentifier:reuseIdentifier];
     if(self) {
         [self setup];
-        [self configureWithStyle:style speakerLabel:hasSpeakerLabel timeStamp:hasTimestamp];
+        [self configureWithStyle:style
+                    speakerLabel:hasSpeakerLabel
+                       timeStamp:hasTimestamp
+                 imageAttachment:hasImage];
     }
     return self;
 }
@@ -187,6 +199,11 @@
 - (void)setSpeaker:(NSString*) name
 {
     self.speakerLabel.text = name;
+}
+
+- (void)setPicture:(UIImage *) picture
+{
+    self.bubbleView.attachment = picture;
 }
 
 

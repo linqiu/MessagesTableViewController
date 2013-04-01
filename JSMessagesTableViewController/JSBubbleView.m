@@ -41,6 +41,7 @@
 #define kMarginBottom 4.0f
 #define kPaddingTop 4.0f
 #define kPaddingBottom 8.0f
+#define kImageHeight 70.0f
 #define kBubblePaddingRight 35.0f
 
 @interface JSBubbleView()
@@ -56,6 +57,7 @@
 
 @synthesize style;
 @synthesize text;
+@synthesize attachment;
 
 #pragma mark - Initialization
 - (void)setup
@@ -69,6 +71,7 @@
     if(self) {
         [self setup];
         self.style = bubbleStyle;
+        
     }
     return self;
 }
@@ -82,7 +85,14 @@
 
 - (void)setText:(NSString *)newText
 {
-    text = newText;
+    text = [newText stringByReplacingOccurrencesOfString:@"--image_attachment--" withString:@""];
+//    text  = newText;
+    [self setNeedsDisplay];
+}
+
+- (void)setAttachment:(UIImage *)newAttachment
+{
+    attachment = newAttachment;
     [self setNeedsDisplay];
 }
 
@@ -90,13 +100,38 @@
 - (void)drawRect:(CGRect)frame
 {
 	UIImage *image = [JSBubbleView bubbleImageForStyle:self.style];
+    CGSize imageSize = [JSBubbleView imageSizeForImage:self.attachment];
     CGSize bubbleSize = [JSBubbleView bubbleSizeForText:self.text];
-	CGRect bubbleFrame = CGRectMake(([self styleIsOutgoing] ? self.frame.size.width - bubbleSize.width : 0.0f),
+    
+    CGFloat bubbleHeight = 0.0f;
+    CGFloat bubbleWidth = 0.0f;
+    
+    if (imageSize.width > bubbleSize.width)
+        bubbleWidth = imageSize.width;
+    else
+        bubbleWidth = bubbleSize.width;
+    
+    bubbleHeight = imageSize.height + bubbleSize.height;
+    
+    NSLog(@"bubbleHeight: %f, image height; %f, bubble height: %f", bubbleHeight, imageSize.height, bubbleSize.height);
+    
+    
+//	CGRect bubbleFrame = CGRectMake(([self styleIsOutgoing] ? self.frame.size.width - bubbleSize.width : 0.0f),
+//                                    kMarginTop,
+//                                    bubbleWidth,
+//                                    bubbleHeight + kPaddingTop + kPaddingBottom);
+    CGRect bubbleFrame = CGRectMake(([self styleIsOutgoing] ? self.frame.size.width - bubbleSize.width : 0.0f),
                                     kMarginTop,
                                     bubbleSize.width,
                                     bubbleSize.height);
     
 	[image drawInRect:bubbleFrame];
+    
+    CGRect imageFrame = CGRectMake(([self styleIsOutgoing] ? self.frame.size.width - bubbleSize.width +20.0f : 20.0f),
+                                   bubbleSize.height + kMarginTop,
+                                   imageSize.width,
+                                   imageSize.height);
+    [self.attachment drawInRect:imageFrame];
 	
 	CGSize textSize = [JSBubbleView textSizeForText:self.text];
 	CGFloat textX = (CGFloat)image.leftCapWidth - 3.0f + ([self styleIsOutgoing] ? bubbleFrame.origin.x : 0.0f);
@@ -109,6 +144,29 @@
                  withFont:[JSBubbleView font]
             lineBreakMode:NSLineBreakByWordWrapping
                 alignment:NSTextAlignmentLeft];
+    
+    
+//    UIImage *image = [JSBubbleView bubbleImageForStyle:self.style];
+//    CGSize bubbleSize = [JSBubbleView bubbleSizeForText:self.text];
+//	CGRect bubbleFrame = CGRectMake(([self styleIsOutgoing] ? self.frame.size.width - bubbleSize.width : 0.0f),
+//                                    kMarginTop,
+//                                    bubbleSize.width,
+//                                    bubbleSize.height);
+//    
+//	[image drawInRect:bubbleFrame];
+//    
+//	CGSize textSize = [JSBubbleView textSizeForText:self.text];
+//	CGFloat textX = (CGFloat)image.leftCapWidth - 3.0f + ([self styleIsOutgoing] ? bubbleFrame.origin.x : 0.0f);
+//    CGRect textFrame = CGRectMake(textX,
+//                                  kPaddingTop + kMarginTop,
+//                                  textSize.width,
+//                                  textSize.height);
+//    
+//	[self.text drawInRect:textFrame
+//                 withFont:[JSBubbleView font]
+//            lineBreakMode:NSLineBreakByWordWrapping
+//                alignment:NSTextAlignmentLeft];
+    
 }
 
 #pragma mark - Bubble view
@@ -158,6 +216,24 @@
                lineBreakMode:NSLineBreakByWordWrapping];
 }
 
++ (CGSize) imageSizeForImage:(UIImage *) img
+{
+    CGFloat width;
+    CGFloat height = kImageHeight;
+    
+    CGFloat ratio = img.size.width/img.size.height;
+    
+    width = ratio*height;
+    
+    if(img == nil)
+        height = 0.0f;
+    
+    //NSLog(@"img width: %f, img height: %f", width, height);
+    return CGSizeMake(width + kBubblePaddingRight,
+                      height + kPaddingTop + kPaddingBottom);
+
+}
+
 + (CGSize)bubbleSizeForText:(NSString *)txt
 {
 	CGSize textSize = [JSBubbleView textSizeForText:txt];
@@ -167,7 +243,15 @@
 
 + (CGFloat)cellHeightForText:(NSString *)txt
 {
-    return [JSBubbleView bubbleSizeForText:txt].height + kMarginTop + kMarginBottom;
+    CGFloat imageHeight = 0.0f;
+    if ([txt rangeOfString:@"--image_attachment--"].location != NSNotFound) {
+        imageHeight = kImageHeight + 30.0f;
+    }
+    else {
+    }
+    NSLog(@"cellHeight: %f", [JSBubbleView bubbleSizeForText:txt].height +imageHeight + kMarginTop + kMarginBottom);
+    
+    return [JSBubbleView bubbleSizeForText:txt].height +imageHeight + kMarginTop + kMarginBottom;
 }
 
 + (int)maxCharactersPerLine

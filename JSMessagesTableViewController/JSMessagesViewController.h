@@ -62,6 +62,7 @@ typedef enum {
 @protocol JSMessagesViewDelegate <NSObject>
 @required
 - (void)sendPressed:(UIButton *)sender withText:(NSString *)text;
+- (void)attachImage:(UIButton *)sender;
 - (JSBubbleMessageStyle)messageStyleForRowAtIndexPath:(NSIndexPath *)indexPath;
 - (JSMessagesViewTimestampPolicy)timestampPolicyForMessagesView;
 - (JSMessageViewSpeakerPolicy) speakerPolicyForMessagesView:(NSIndexPath *)indexPath;
@@ -92,9 +93,11 @@ typedef enum {
 
 #pragma mark - Initialization
 - (UIButton *)sendButton;
+- (UIButton *)attachImageButton;
 
 #pragma mark - Actions
 - (void)sendPressed:(UIButton *)sender;
+- (void)attachImage:(UIButton *)attachImage;
 - (void)handleSwipe:(UIGestureRecognizer *)guestureRecognizer;
 
 #pragma mark - Messages view controller
