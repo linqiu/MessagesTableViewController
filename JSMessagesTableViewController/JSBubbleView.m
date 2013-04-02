@@ -72,13 +72,7 @@
         [self setup];
         self.style = bubbleStyle;
         self.attachmentView.userInteractionEnabled = YES;
-        
-        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap:)];
-        [tap setNumberOfTapsRequired:1];
-        
-        [self.attachmentView addGestureRecognizer: tap];
-        tap.delegate = self;
-        
+    
     }
     return self;
 }
@@ -112,7 +106,8 @@
     
     CGFloat bubbleHeight = 0.0f;
     CGFloat bubbleWidth = 0.0f;
-    
+    CGFloat imageWidth = 0.0f;
+    CGFloat imageHeight = 0.0f;
     if (imageSize.width > bubbleSize.width)
         bubbleWidth = imageSize.width;
     else
@@ -122,19 +117,26 @@
     
 //    NSLog(@"bubbleHeight: %f, image height; %f, bubble height: %f", bubbleHeight, imageSize.height, bubbleSize.height);
     
+    if([self.text isEqualToString:@""]) {
+        imageWidth = 100.0f;
+        imageHeight = 100.0f;
+    }
+        
     
    CGRect bubbleFrame = CGRectMake(([self styleIsOutgoing] ? self.frame.size.width - bubbleSize.width : 0.0f),
                                     kMarginTop,
                                     bubbleSize.width,
                                     bubbleSize.height);
     
-	[image drawInRect:bubbleFrame];
+    if(![self.text isEqualToString:@""])
+        [image drawInRect:bubbleFrame];
     
-    CGRect imageFrame = CGRectMake(([self styleIsOutgoing] ? self.frame.size.width - bubbleSize.width +20.0f : 20.0f),
+    CGRect imageFrame = CGRectMake(([self styleIsOutgoing] ? self.frame.size.width - imageSize.width - 20.0f : 20.0f),
                                    bubbleSize.height + kMarginTop,
                                    imageSize.width,
                                    imageSize.height);
     self.attachmentView.frame = imageFrame;
+
     [self.attachmentView.image drawInRect:imageFrame];
 	
 	CGSize textSize = [JSBubbleView textSizeForText:self.text];
@@ -142,9 +144,9 @@
     CGRect textFrame = CGRectMake(textX,
                                   kPaddingTop + kMarginTop,
                                   textSize.width,
-                                  textSize.height);
+                                  textSize.height + imageSize.height);
     
-	[self.text drawInRect:textFrame
+    [self.text drawInRect:textFrame
                  withFont:[JSBubbleView font]
             lineBreakMode:NSLineBreakByWordWrapping
                 alignment:NSTextAlignmentLeft];
@@ -209,6 +211,7 @@
     
     width = ratio*height;
     
+    NSLog(@"imageSizeForImage width: %f, img width: %f, height: %f", width, img.size.width, img.size.height);
     if(img == nil)
         height = 0.0f;
     
