@@ -41,16 +41,19 @@
 @property (strong, nonatomic) JSBubbleView *bubbleView;
 @property (strong, nonatomic) UILabel *timestampLabel;
 @property (strong, nonatomic) UILabel *speakerLabel;
+@property (strong, nonatomic) UILabel *readLabel;
 @property (strong, nonatomic) UIImageView *imageAttachment;
 
 - (void)setup;
 - (void)configureTimestampLabel;
+- (void)configureReadLabel:(CGFloat) yPosition;
 - (void)configureSpeakerLabel:(CGFloat) yPosition;
 - (void)configureImage;
 - (void)configureWithStyle:(JSBubbleMessageStyle)style
               speakerLabel:(BOOL)hasSpeakerLabel
                  timeStamp:(BOOL)hasTimestamp
-           imageAttachment:(BOOL)hasImage;
+           imageAttachment:(BOOL)hasImage
+          readNotification:(BOOL)hasRead;
 @end
 
 
@@ -91,6 +94,23 @@
     [self.contentView bringSubviewToFront:self.timestampLabel];
 }
 
+- (void)configureReadLabel:(CGFloat) yPosition {
+    self.readLabel = [[UILabel alloc] initWithFrame:CGRectMake(0.0f,
+                                                                  yPosition,
+                                                                  [UIScreen mainScreen].bounds.size.width - 20.0f,
+                                                                  14.5f)];
+    self.readLabel.autoresizingMask =   UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    self.readLabel.backgroundColor = [UIColor clearColor];
+    self.readLabel.textAlignment = NSTextAlignmentRight;
+    self.readLabel.textColor = [UIColor messagesTimestampColor];
+    self.readLabel.shadowColor = [UIColor whiteColor];
+    self.readLabel.shadowOffset = CGSizeMake(0.0f, 1.0f);
+    self.readLabel.font = [UIFont boldSystemFontOfSize:11.0f];
+    
+    [self.contentView addSubview:self.readLabel];
+    [self.contentView bringSubviewToFront:self.readLabel];
+}
+
 - (void)configureSpeakerLabel:(CGFloat) yPosition
 {
     self.speakerLabel = [[UILabel alloc] initWithFrame:CGRectMake(10.0f,
@@ -113,6 +133,7 @@
               speakerLabel:(BOOL)hasSpeakerLabel
                  timeStamp:(BOOL)hasTimestamp
            imageAttachment:(BOOL)hasImage
+          readNotification:(BOOL)hasRead  
 {
     CGFloat bubbleY = 0.0f;
     CGFloat bubbleheight = 0.0f;
@@ -139,6 +160,8 @@
        // bubbleheight += 70.0f;
     }
     
+    
+    
     CGRect frame = CGRectMake(0.0f,
                               bubbleY,
                               self.contentView.frame.size.width,
@@ -157,12 +180,18 @@
 //    [self.contentView setFrame:newFrame];
     [self.contentView addSubview:self.bubbleView];
     [self.contentView sendSubviewToBack:self.bubbleView];
+    
+    if(hasRead) {
+        [self configureReadLabel:self.contentView.frame.size.height-5.0];
+        NSLog(@"sent text: %@", self.readLabel.text);
+    }
 }
 
 - (id)initWithBubbleStyle:(JSBubbleMessageStyle)style
              hasTimestamp:(BOOL)hasTimestamp
           hasSpeakerLabel:(BOOL)hasSpeakerLabel
        hasImageAttachment:(BOOL)hasImage
+      hasReadNotification:(BOOL)hasReadNotification
           reuseIdentifier:(NSString *)reuseIdentifier
 {
     self = [super initWithStyle:UITableViewCellStyleDefault reuseIdentifier:reuseIdentifier];
@@ -171,7 +200,8 @@
         [self configureWithStyle:style
                     speakerLabel:hasSpeakerLabel
                        timeStamp:hasTimestamp
-                 imageAttachment:hasImage];
+                 imageAttachment:hasImage
+                readNotification:hasReadNotification];
     }
     return self;
 }
@@ -204,6 +234,18 @@
 - (void)setPicture:(UIImage *) picture
 {
     self.bubbleView.attachmentView = [[UIImageView alloc] initWithImage:picture];
+}
+
+- (void)setNotification:(NSDate *)read {
+    
+    NSString *date = [[NSString alloc] init];
+    if (read == nil) {
+        date = @"sent";
+    }
+    else {
+        date = [@"read at " stringByAppendingString:[NSDateFormatter localizedStringFromDate:read dateStyle:NSDateFormatterShortStyle timeStyle:NSDateFormatterShortStyle]];
+    }
+    self.readLabel.text = date;
 }
 
 

@@ -188,11 +188,12 @@
     BOOL hasTimestamp = [self shouldHaveTimestampForRowAtIndexPath:indexPath];
     BOOL hasSpeakerLabel = [self shouldHaveSpeakerForRowAtIndexPath:indexPath];
     BOOL hasImageAttachment = [self shouldHaveImageAttachmentForRowAtIndexPath:indexPath];
+    BOOL hasReadNotification = [self shouldHaveReadNotificationForRowAtIndexPath:indexPath];
 
     
 //    NSLog(@"image attachment? %s, indexPath: %d", hasImageAttachment? "yes": "no", indexPath.row);
     
-    NSString *CellID = [NSString stringWithFormat:@"MessageCell_%d_%d_%d_%d", style, hasTimestamp, hasSpeakerLabel, hasImageAttachment];
+    NSString *CellID = [NSString stringWithFormat:@"MessageCell_%d_%d_%d_%d_%d", style, hasTimestamp, hasSpeakerLabel, hasImageAttachment, hasReadNotification];
     
     JSBubbleMessageCell *cell = (JSBubbleMessageCell *)[tableView dequeueReusableCellWithIdentifier:CellID];
     
@@ -201,6 +202,7 @@
                                                    hasTimestamp:hasTimestamp
                                                 hasSpeakerLabel:hasSpeakerLabel
                                              hasImageAttachment:hasImageAttachment
+                                            hasReadNotification:hasReadNotification
                                                 reuseIdentifier:CellID];
     }
     
@@ -226,6 +228,11 @@
     
     if(hasSpeakerLabel) {
         [cell setSpeaker:[self.dataSource speakerNameForRowAtIndexPath:indexPath]];
+    }
+    
+    if(hasReadNotification) {
+        [cell setNotification:[self.dataSource readNotificationForRowAtIndex:indexPath]];
+        NSLog(@"read policy: %@", [self.dataSource readNotificationForRowAtIndex:indexPath]);
     }
     
     [cell setMessage:[self.dataSource textForRowAtIndexPath:indexPath]];
@@ -263,6 +270,18 @@
             break;
         case JSMessageViewImageAttachmentPolicyYesImage:
             return YES;
+            break;
+    }
+    return NO;
+}
+
+- (BOOL) shouldHaveReadNotificationForRowAtIndexPath:(NSIndexPath *) indexPath {
+    switch ([self.delegate readNotificationPolicyForMessagesView:indexPath]) {
+        case JSMessageViewReadNotificationPolicyYes:
+            return YES;
+            break;
+        case JSMessageViewReadNotificationPolicyNo:
+            return NO;
             break;
     }
     return NO;

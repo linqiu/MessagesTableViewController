@@ -59,6 +59,12 @@ typedef enum {
     JSMessageViewImageAttachmentPolicyNoImage
 } JSMessageViewImageAttachment;
 
+
+typedef enum {
+    JSMessageViewReadNotificationPolicyYes = 0,
+    JSMessageViewReadNotificationPolicyNo
+} JSMessageViewReadNotificationPolicy;
+
 @protocol JSMessagesViewDelegate <NSObject>
 @required
 - (void)sendPressed:(UIButton *)sender withText:(NSString *)text;
@@ -67,6 +73,7 @@ typedef enum {
 - (JSMessagesViewTimestampPolicy)timestampPolicyForMessagesView;
 - (JSMessageViewSpeakerPolicy) speakerPolicyForMessagesView:(NSIndexPath *)indexPath;
 - (JSMessageViewImageAttachment) imageAttachmentPolicyForMessagesView:(NSIndexPath*) indexPath;
+- (JSMessageViewReadNotificationPolicy) readNotificationPolicyForMessagesView:(NSIndexPath*) indexPath;
 - (BOOL)hasTimestampForRowAtIndexPath:(NSIndexPath *)indexPath;
 - (BOOL)hasSpeakerForRowAtIndexPath:(NSIndexPath *)indexPath;
 @end
@@ -79,6 +86,7 @@ typedef enum {
 - (NSDate *)timestampForRowAtIndexPath:(NSIndexPath *)indexPath;
 - (NSString *)speakerNameForRowAtIndexPath:(NSIndexPath *) indexPath;
 - (NSString *) imageUrlForRowAtIndex:(NSIndexPath *) indexPath;
+- (NSDate *) readNotificationForRowAtIndex:(NSIndexPath *) indexPath;
 @end
 
 
@@ -99,6 +107,7 @@ typedef enum {
 - (void)sendPressed:(UIButton *)sender;
 - (void)attachImage:(UIButton *)attachImage;
 - (void)handleSwipe:(UIGestureRecognizer *)guestureRecognizer;
+
 
 #pragma mark - Messages view controller
 - (BOOL)shouldHaveTimestampForRowAtIndexPath:(NSIndexPath *)indexPath;

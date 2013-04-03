@@ -238,7 +238,7 @@
     }
    // NSLog(@"cellHeight: %f", [JSBubbleView bubbleSizeForText:txt].height +imageHeight + kMarginTop + kMarginBottom);
     
-    return [JSBubbleView bubbleSizeForText:txt].height +imageHeight + kMarginTop + kMarginBottom;
+    return [JSBubbleView bubbleSizeForText:txt].height +imageHeight + kMarginTop + kMarginBottom +20.0;
 }
 
 + (int)maxCharactersPerLine

@@ -45,6 +45,7 @@
              hasTimestamp:(BOOL)hasTimestamp
            hasSpeakerLabel:(BOOL)hasSpeakerLabel
        hasImageAttachment:(BOOL)hasImage
+      hasReadNotification:(BOOL)hasReadNotification
           reuseIdentifier:(NSString *)reuseIdentifier;
 
 
@@ -53,5 +54,6 @@
 - (void)setTimestamp:(NSDate *)date;
 - (void)setSpeaker:(NSString*) name;
 - (void)setPicture:(UIImage *)image;
+- (void)setNotification:(NSDate *)read;
 
 @end
