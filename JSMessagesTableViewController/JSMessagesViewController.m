@@ -232,7 +232,6 @@
     
     if(hasReadNotification) {
         [cell setNotification:[self.dataSource readNotificationForRowAtIndex:indexPath]];
-        NSLog(@"read policy: %@", [self.dataSource readNotificationForRowAtIndex:indexPath]);
     }
     
     [cell setMessage:[self.dataSource textForRowAtIndexPath:indexPath]];

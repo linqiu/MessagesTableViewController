@@ -127,9 +127,11 @@
                                     kMarginTop,
                                     bubbleSize.width,
                                     bubbleSize.height);
-    
-    if(![self.text isEqualToString:@""])
+
+    if(self.text != nil && ![self.text isEqualToString:@""])
         [image drawInRect:bubbleFrame];
+    
+   // NSLog(@"text: %@", self.text);
     
     CGRect imageFrame = CGRectMake(([self styleIsOutgoing] ? self.frame.size.width - imageSize.width - 20.0f : 20.0f),
                                    bubbleSize.height + kMarginTop,
@@ -211,7 +213,7 @@
     
     width = ratio*height;
     
-    NSLog(@"imageSizeForImage width: %f, img width: %f, height: %f", width, img.size.width, img.size.height);
+//    NSLog(@"imageSizeForImage width: %f, img width: %f, height: %f", width, img.size.width, img.size.height);
     if(img == nil)
         height = 0.0f;
     

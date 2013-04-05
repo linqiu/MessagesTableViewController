@@ -183,7 +183,6 @@
     
     if(hasRead) {
         [self configureReadLabel:self.contentView.frame.size.height-5.0];
-        NSLog(@"sent text: %@", self.readLabel.text);
     }
 }
 
