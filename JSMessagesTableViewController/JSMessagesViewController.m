@@ -214,12 +214,17 @@
     [cell.imageView addGestureRecognizer:tapped];
     
     if (hasImageAttachment) {
+        dispatch_queue_t backgroundImageLoadingQueue = dispatch_queue_create("com.gryphn.imageloaderqueue", 0);
+        
+        dispatch_async(backgroundImageLoadingQueue, ^{
+        
         [cell.imageView setImageWithURL:[NSURL URLWithString:[self.dataSource imageUrlForRowAtIndex:indexPath]]
                        placeholderImage:[UIImage imageNamed:@"placeholder.png"]
                               completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
-                                  //NSLog(@"image: %@, error: %@, cacheType: %u", image, error, cacheType);
+                                  NSLog(@"image: %@, error: %@, cacheType: %u", image, error, cacheType);
                                   [cell setPicture:image];
                               }];
+        });
     }
     
     if(hasTimestamp) {

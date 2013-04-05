@@ -135,7 +135,7 @@
     
     CGRect imageFrame = CGRectMake(([self styleIsOutgoing] ? self.frame.size.width - imageSize.width - 20.0f : 20.0f),
                                    bubbleSize.height + kMarginTop,
-                                   (imageSize.width = NAN ? 0.01f: imageSize.width),
+                                   (imageSize.width = NAN ? 100.0f: imageSize.width),
                                    imageSize.height);
     self.attachmentView.frame = imageFrame;
 
