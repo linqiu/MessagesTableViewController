@@ -235,7 +235,8 @@
                                 options:SDWebImageRefreshCached
                               completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
                                   NSLog(@"image: %@, error: %@, cacheType: %u", image, error, cacheType);
-                                  [cell setPicture:image];
+                                  if(error == nil)
+                                      [cell setPicture:image];
                                   
 //                                  UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapImage:)];
 //                                  
