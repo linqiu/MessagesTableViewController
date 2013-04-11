@@ -132,13 +132,12 @@
         [image drawInRect:bubbleFrame];
     
    // NSLog(@"text: %@", self.text);
-    NSLog(@"imageSize.width: %f", imageSize.width);
     
     CGRect imageFrame = CGRectMake(([self styleIsOutgoing] ? self.frame.size.width - imageSize.width - 20.0f : 20.0f),
                                    bubbleSize.height + kMarginTop,
                                    (isnan(imageSize.width) ? 100.0f: imageSize.width),
                                    imageSize.height);
-
+    NSLog(@"imgSize.width: %f, imageFrame.width: %f, imageFrame.height: %f", imageSize.width, imageFrame.size.width, imageFrame.size.height);
     self.attachmentView.frame = imageFrame;
 
     [self.attachmentView.image drawInRect:imageFrame];

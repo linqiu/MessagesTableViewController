@@ -133,6 +133,10 @@
 {
     [super didReceiveMemoryWarning];
     NSLog(@"*** %@: didReceiveMemoryWarning ***", self.class);
+    SDImageCache *imageCache = [SDImageCache sharedImageCache];
+    [imageCache clearMemory];
+    [imageCache clearDisk];
+    [imageCache cleanDisk];
 }
 
 #pragma mark - View rotation
@@ -164,6 +168,12 @@
 {
     [self.inputView.textView resignFirstResponder];
 }
+
+//- (void)tapImage:(UITapGestureRecognizer *) gesture {
+//    UIImage *img = gesture.view;
+//    
+//    NSLog(@"touched this img: %@", img);
+//}
 
 - (void)attachImage:(UIButton *)sender
 {
@@ -217,12 +227,19 @@
         dispatch_queue_t backgroundImageLoadingQueue = dispatch_queue_create("com.gryphn.imageloaderqueue", 0);
         
         dispatch_async(backgroundImageLoadingQueue, ^{
+            
+            
         
         [cell.imageView setImageWithURL:[NSURL URLWithString:[self.dataSource imageUrlForRowAtIndex:indexPath]]
                        placeholderImage:[UIImage imageNamed:@"placeholder.png"]
+                                options:SDWebImageRefreshCached
                               completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
                                   NSLog(@"image: %@, error: %@, cacheType: %u", image, error, cacheType);
                                   [cell setPicture:image];
+                                  
+//                                  UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapImage:)];
+//                                  
+//                                  [cell addGestureRecognizer:tap];
                               }];
         });
     }
