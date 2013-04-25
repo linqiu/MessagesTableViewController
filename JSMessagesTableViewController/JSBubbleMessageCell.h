@@ -39,6 +39,7 @@
 #define DATE_LABEL_HEIGHT 12.0f
 
 @interface JSBubbleMessageCell : UITableViewCell
+@property (strong, nonatomic) JSBubbleView *bubbleView;
 
 #pragma mark - Initialization
 - (id)initWithBubbleStyle:(JSBubbleMessageStyle)style

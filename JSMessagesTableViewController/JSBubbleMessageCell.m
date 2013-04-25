@@ -38,7 +38,6 @@
 
 @interface JSBubbleMessageCell()
 
-@property (strong, nonatomic) JSBubbleView *bubbleView;
 @property (strong, nonatomic) UILabel *timestampLabel;
 @property (strong, nonatomic) UILabel *speakerLabel;
 @property (strong, nonatomic) UILabel *readLabel;
@@ -74,6 +73,7 @@
     self.textLabel.hidden = YES;
     self.detailTextLabel.text = nil;
     self.detailTextLabel.hidden = YES;
+
 }
 
 - (void)configureTimestampLabel
