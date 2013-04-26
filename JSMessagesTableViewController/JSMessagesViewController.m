@@ -217,8 +217,8 @@ ImageWorker *_imageWorker;
 
         [_imageWorker loadImageFromFilePath:filePath success:^(UIImage *image) {
             [cell setPicture:image];
-            UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapImage:)];
-            [cell addGestureRecognizer:tap];
+            //UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapImage:)];
+            //[cell addGestureRecognizer:tap];
         }];
     }
 
