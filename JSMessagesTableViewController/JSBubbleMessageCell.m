@@ -95,17 +95,19 @@
 }
 
 - (void)configureReadLabel:(CGFloat) yPosition {
+    NSLog(@"this be YPos: %f", yPosition);
     self.readLabel = [[UILabel alloc] initWithFrame:CGRectMake(0.0f,
                                                                   yPosition,
                                                                   [UIScreen mainScreen].bounds.size.width - 20.0f,
                                                                   14.5f)];
-    self.readLabel.autoresizingMask =   UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+//    self.readLabel.autoresizingMask =   UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     self.readLabel.backgroundColor = [UIColor clearColor];
     self.readLabel.textAlignment = NSTextAlignmentRight;
     self.readLabel.textColor = [UIColor messagesTimestampColor];
     self.readLabel.shadowColor = [UIColor whiteColor];
     self.readLabel.shadowOffset = CGSizeMake(0.0f, 1.0f);
     self.readLabel.font = [UIFont boldSystemFontOfSize:11.0f];
+    self.readLabel.autoresizingMask = UIViewAutoresizingFlexibleTopMargin;
     
     [self.contentView addSubview:self.readLabel];
     [self.contentView bringSubviewToFront:self.readLabel];
@@ -155,34 +157,22 @@
         bubbleheight = 29.0f;
     }
     
-    if(hasImage) {
-       // bubbleY += 50.0f;
-       // bubbleheight += 70.0f;
-    }
-    
-    
-    
     CGRect frame = CGRectMake(0.0f,
                               bubbleY,
                               self.contentView.frame.size.width,
                               self.contentView.frame.size.height - bubbleheight);
-    
     
     self.bubbleView = [[JSBubbleView alloc] initWithFrame:frame
                                               bubbleStyle:style];
     
     self.bubbleView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     
-//    CGRect newFrame = self.contentView.frame;
-//    
-//    newFrame.size.height += self.bubbleView.frame.size.height;
-//    
-//    [self.contentView setFrame:newFrame];
+
     [self.contentView addSubview:self.bubbleView];
     [self.contentView sendSubviewToBack:self.bubbleView];
     
     if(hasRead) {
-        [self configureReadLabel:self.contentView.frame.size.height-5.0];
+        [self configureReadLabel:self.contentView.frame.size.height];
     }
 }
 
@@ -208,6 +198,7 @@
 - (void)setBackgroundColor:(UIColor *)color
 {
     [super setBackgroundColor:color];
+    self.contentView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     [self.contentView setBackgroundColor:color];
     [self.bubbleView setBackgroundColor:color];
 }
