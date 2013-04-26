@@ -95,7 +95,6 @@
 }
 
 - (void)configureReadLabel:(CGFloat) yPosition {
-    NSLog(@"this be YPos: %f", yPosition);
     self.readLabel = [[UILabel alloc] initWithFrame:CGRectMake(0.0f,
                                                                   yPosition,
                                                                   [UIScreen mainScreen].bounds.size.width - 20.0f,
