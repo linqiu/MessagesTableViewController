@@ -115,8 +115,6 @@
     
     bubbleHeight = imageSize.height + bubbleSize.height;
     
-//    NSLog(@"bubbleHeight: %f, image height; %f, bubble height: %f", bubbleHeight, imageSize.height, bubbleSize.height);
-    
     if([self.text isEqualToString:@""]) {
         imageWidth = 100.0f;
         imageHeight = 100.0f;
@@ -130,14 +128,12 @@
 
     if(self.text != nil && ![self.text isEqualToString:@""])
         [image drawInRect:bubbleFrame];
-    
-   // NSLog(@"text: %@", self.text);
-    
+        
     CGRect imageFrame = CGRectMake(([self styleIsOutgoing] ? self.frame.size.width - imageSize.width - 20.0f : 20.0f),
                                    bubbleSize.height + kMarginTop,
                                    (isnan(imageSize.width) ? 100.0f: imageSize.width),
                                    imageSize.height);
-//    NSLog(@"imgSize.width: %f, imageFrame.width: %f, imageFrame.height: %f", imageSize.width, imageFrame.size.width, imageFrame.size.height);
+
     self.attachmentView.frame = imageFrame;
 
     [self.attachmentView.image drawInRect:imageFrame];
@@ -214,11 +210,9 @@
     
     width = ratio*height;
     
-//    NSLog(@"imageSizeForImage width: %f, img width: %f, height: %f", width, img.size.width, img.size.height);
     if(img == nil)
         height = 0.0f;
     
-    //NSLog(@"img width: %f, img height: %f", width, height);
     return CGSizeMake(width + kBubblePaddingRight,
                       height + kPaddingTop + kPaddingBottom);
 
@@ -239,7 +233,6 @@
     }
     else {
     }
-   // NSLog(@"cellHeight: %f", [JSBubbleView bubbleSizeForText:txt].height +imageHeight + kMarginTop + kMarginBottom);
     
     return [JSBubbleView bubbleSizeForText:txt].height +imageHeight + kMarginTop + kMarginBottom;
 }

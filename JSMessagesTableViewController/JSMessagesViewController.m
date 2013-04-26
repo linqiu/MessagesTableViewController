@@ -131,10 +131,6 @@ ImageWorker *_imageWorker;
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     NSLog(@"*** %@: didReceiveMemoryWarning ***", self.class);
-    SDImageCache *imageCache = [SDImageCache sharedImageCache];
-    [imageCache clearMemory];
-    [imageCache clearDisk];
-    [imageCache cleanDisk];
 }
 
 #pragma mark - View rotation
@@ -188,9 +184,6 @@ ImageWorker *_imageWorker;
     BOOL hasSpeakerLabel = [self shouldHaveSpeakerForRowAtIndexPath:indexPath];
     BOOL hasImageAttachment = [self shouldHaveImageAttachmentForRowAtIndexPath:indexPath];
     BOOL hasReadNotification = [self shouldHaveReadNotificationForRowAtIndexPath:indexPath];
-
-
-//    NSLog(@"image attachment? %s, indexPath: %d", hasImageAttachment? "yes": "no", indexPath.row);
 
     NSString *CellID = [NSString stringWithFormat:@"MessageCell_%d_%d_%d_%d_%d", style, hasTimestamp, hasSpeakerLabel, hasImageAttachment, hasReadNotification];
 
