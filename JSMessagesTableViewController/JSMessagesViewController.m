@@ -51,12 +51,14 @@
 
 
 @implementation JSMessagesViewController
-ImageWorker *_imageWorker;
+@synthesize imageWorker;
+@synthesize placeHolderImage;
 
 #pragma mark - Initialization
-- (void)setup {
-    _imageWorker = [[ImageWorker alloc] initWithWidth:100 height:100];
-    [_imageWorker addImageCache];
+- (void)setup{
+    self.placeHolderImage = [UIImage imageNamed:@"defaultImage.png"];
+    self.imageWorker = [[ImageWorker alloc] initWithWidth:100 height:100];
+    [self.imageWorker addImageCache];
 
     CGSize size = self.view.frame.size;
 
@@ -208,17 +210,18 @@ ImageWorker *_imageWorker;
     cell.imageView.userInteractionEnabled = YES;
     cell.imageView.tag = indexPath.row;
 
-    UITapGestureRecognizer *tapped = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap:)];
-    tapped.numberOfTapsRequired = 1;
-    [cell.imageView addGestureRecognizer:tapped];
+
 
     if (hasImageAttachment) {
         NSString *filePath = [self.dataSource imageUrlForRowAtIndex:indexPath];
+        [cell setPicture:self.placeHolderImage];
 
-        [_imageWorker loadImageFromFilePath:filePath success:^(UIImage *image) {
+        [self.imageWorker loadImageFromFilePath:filePath success:^(UIImage *image) {
             [cell setPicture:image];
-            //UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapImage:)];
-            //[cell addGestureRecognizer:tap];
+            UITapGestureRecognizer *tapped = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap:)];
+            tapped.numberOfTapsRequired = 1;
+            [cell addGestureRecognizer:tapped];
+
         }];
     }
 
@@ -263,10 +266,8 @@ ImageWorker *_imageWorker;
     switch ([self.delegate speakerPolicyForMessagesView:indexPath]) {
         case JSMessageViewSpeakerPolicyShowOthers:
             return YES;
-            break;
         case JSMessageViewSpeakerPolicyDoNotShowMe:
             return NO;
-            break;
     }
     return NO;
 }
@@ -278,7 +279,6 @@ ImageWorker *_imageWorker;
             break;
         case JSMessageViewImageAttachmentPolicyYesImage:
             return YES;
-            break;
     }
     return NO;
 }
@@ -287,10 +287,8 @@ ImageWorker *_imageWorker;
     switch ([self.delegate readNotificationPolicyForMessagesView:indexPath]) {
         case JSMessageViewReadNotificationPolicyYes:
             return YES;
-            break;
         case JSMessageViewReadNotificationPolicyNo:
             return NO;
-            break;
     }
     return NO;
 }
@@ -299,19 +297,14 @@ ImageWorker *_imageWorker;
     switch ([self.delegate timestampPolicyForMessagesView]) {
         case JSMessagesViewTimestampPolicyAll:
             return YES;
-            break;
         case JSMessagesViewTimestampPolicyAlternating:
             return indexPath.row % 2 == 0;
-            break;
         case JSMessagesViewTimestampPolicyEveryThree:
             return indexPath.row % 3 == 0;
-            break;
         case JSMessagesViewTimestampPolicyEveryFive:
             return indexPath.row % 5 == 0;
-            break;
         case JSMessagesViewTimestampPolicyCustom:
             return NO;
-            break;
     }
 
     return NO;
@@ -340,19 +333,9 @@ ImageWorker *_imageWorker;
     }
 }
 
-//-(void) handleTap:(UITapGestureRecognizer *)recognizer {
-//    NSLog(@"SUP BRO, tapped it");
-//    
-//    if (recognizer.state == UIGestureRecognizerStateEnded) {
-//        //push your view controller
-//        
-//        UIImageView *img = (UIImageView *)[recognizer view];
-//        
-//        NSLog(@"SUP BRO, tapped it");
-//        //   [self performSegueWithIdentifier:@"toPictureView" sender:img];
-//        
-//    }
-//}
+-(void) handleTap:(UITapGestureRecognizer *)recognizer {
+    [self.delegate handleTap:recognizer];
+}
 
 
 #pragma mark - Text view delegate

@@ -40,6 +40,8 @@
 #import "JSMessageSoundEffect.h"
 #import "UIButton+JSMessagesView.h"
 
+@class ImageWorker;
+
 typedef enum {
     JSMessagesViewTimestampPolicyAll = 0,
     JSMessagesViewTimestampPolicyAlternating,
@@ -69,6 +71,7 @@ typedef enum {
 @required
 - (void)sendPressed:(UIButton *)sender withText:(NSString *)text;
 - (void)attachImage:(UIButton *)sender;
+-(void) handleTap:(UITapGestureRecognizer *)recognizer;
 - (JSBubbleMessageStyle)messageStyleForRowAtIndexPath:(NSIndexPath *)indexPath;
 - (JSMessagesViewTimestampPolicy)timestampPolicyForMessagesView;
 - (JSMessageViewSpeakerPolicy) speakerPolicyForMessagesView:(NSIndexPath *)indexPath;
@@ -98,6 +101,8 @@ typedef enum {
 @property (strong, nonatomic) UITableView *tableView;
 @property (strong, nonatomic) JSMessageInputView *inputView;
 @property (assign, nonatomic) CGFloat previousTextViewContentHeight;
+@property (strong, nonatomic) ImageWorker *imageWorker;
+@property (strong, nonatomic) UIImage *placeHolderImage;
 
 #pragma mark - Initialization
 - (UIButton *)sendButton;
