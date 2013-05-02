@@ -1,4 +1,4 @@
-//
+    //
 //  JSMessageInputView.h
 //
 //  Created by Jesse Squires on 2/12/13.

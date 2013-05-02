@@ -33,6 +33,7 @@
 //  OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+#import <CoreGraphics/CoreGraphics.h>
 #import "JSBubbleMessageCell.h"
 #import "UIColor+JSMessagesView.h"
 
@@ -74,6 +75,7 @@
     self.detailTextLabel.text = nil;
     self.detailTextLabel.hidden = YES;
 
+
 }
 
 - (void)configureTimestampLabel
@@ -98,7 +100,7 @@
     self.readLabel = [[UILabel alloc] initWithFrame:CGRectMake(0.0f,
                                                                   yPosition,
                                                                   [UIScreen mainScreen].bounds.size.width - 20.0f,
-                                                                  14.5f)];
+                                                                  12.5f)];
 //    self.readLabel.autoresizingMask =   UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     self.readLabel.backgroundColor = [UIColor clearColor];
     self.readLabel.textAlignment = NSTextAlignmentRight;
@@ -106,7 +108,7 @@
     self.readLabel.shadowColor = [UIColor whiteColor];
     self.readLabel.shadowOffset = CGSizeMake(0.0f, 1.0f);
     self.readLabel.font = [UIFont boldSystemFontOfSize:11.0f];
-    self.readLabel.autoresizingMask = UIViewAutoresizingFlexibleTopMargin;
+    self.readLabel.autoresizingMask = (UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin|UIViewAutoresizingFlexibleHeight);
     
     [self.contentView addSubview:self.readLabel];
     [self.contentView bringSubviewToFront:self.readLabel];
@@ -138,24 +140,43 @@
 {
     CGFloat bubbleY = 0.0f;
     CGFloat bubbleheight = 0.0f;
+
     
-    if(!hasTimestamp && hasSpeakerLabel) {
+    if(!hasTimestamp && hasSpeakerLabel && !hasRead) {
         [self configureSpeakerLabel:4.0f];
         bubbleY = 14.0f;
         bubbleheight = 14.5f;
-    }
-    else if (hasTimestamp && !hasSpeakerLabel) {
-        [self configureTimestampLabel];
-        bubbleY = 14.0f;
-        bubbleheight = 14.5f;
-    }
-    else if(hasTimestamp && hasSpeakerLabel) {
+    } else if(hasTimestamp && hasSpeakerLabel && !hasRead) {
         [self configureSpeakerLabel:18.0f];
         [self configureTimestampLabel];
-        bubbleY = 28.0f;
-        bubbleheight = 29.0f;
+        bubbleY = 26.0f;
+        bubbleheight = 26.5f;
+    } else if(hasTimestamp && !hasSpeakerLabel && !hasRead ){
+        [self configureTimestampLabel];
+
+        bubbleY = 15.0f;
+        bubbleheight = 24.5f;
+    } else if(hasTimestamp && !hasSpeakerLabel && hasRead){
+        [self configureReadLabel:31.5f];
+        [self configureTimestampLabel];
+
+        bubbleY = 20.0f;
+        bubbleheight = 26.5f;
+    } else if(!hasTimestamp && !hasSpeakerLabel && hasRead){
+        [self configureReadLabel:30.0f];
+        bubbleY = 8.0f;
+        bubbleheight = 9.5f;
     }
-    
+
+//    else
+//    if (hasTimestamp && !hasSpeakerLabel) {
+//        [self configureTimestampLabel];
+//        [self configureReadLabel:4.0f];
+//        bubbleY = 28.0f;
+//        bubbleheight = 29.5f;
+//    }
+
+
     CGRect frame = CGRectMake(0.0f,
                               bubbleY,
                               self.contentView.frame.size.width,
@@ -165,14 +186,10 @@
                                               bubbleStyle:style];
     
     self.bubbleView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    
 
     [self.contentView addSubview:self.bubbleView];
     [self.contentView sendSubviewToBack:self.bubbleView];
-    
-    if(hasRead) {
-        [self configureReadLabel:self.contentView.frame.size.height];
-    }
+
 }
 
 - (id)initWithBubbleStyle:(JSBubbleMessageStyle)style
@@ -225,14 +242,14 @@
     self.bubbleView.attachmentView = [[UIImageView alloc] initWithImage:picture];
 }
 
-- (void)setNotification:(NSDate *)read {
-    
-    NSString *date = [[NSString alloc] init];
-    if (read == nil) {
+- (void)setNotification:(NSDate *)readNotifDate {
+
+    NSString *date;
+    if (readNotifDate == nil) {
         date = @"sent";
     }
     else {
-        date = [@"read at " stringByAppendingString:[NSDateFormatter localizedStringFromDate:read dateStyle:NSDateFormatterShortStyle timeStyle:NSDateFormatterShortStyle]];
+        date = [@"read at " stringByAppendingString:[NSDateFormatter localizedStringFromDate:readNotifDate dateStyle:NSDateFormatterShortStyle timeStyle:NSDateFormatterShortStyle]];
     }
     self.readLabel.text = date;
 }

@@ -70,61 +70,82 @@ typedef enum {
 @protocol JSMessagesViewDelegate <NSObject>
 @required
 - (void)sendPressed:(UIButton *)sender withText:(NSString *)text;
+
 - (void)attachImage:(UIButton *)sender;
--(void) handleTap:(UITapGestureRecognizer *)recognizer;
+
+- (void)handleTap:(UITapGestureRecognizer *)recognizer;
+
 - (JSBubbleMessageStyle)messageStyleForRowAtIndexPath:(NSIndexPath *)indexPath;
+
 - (JSMessagesViewTimestampPolicy)timestampPolicyForMessagesView;
-- (JSMessageViewSpeakerPolicy) speakerPolicyForMessagesView:(NSIndexPath *)indexPath;
-- (JSMessageViewImageAttachment) imageAttachmentPolicyForMessagesView:(NSIndexPath*) indexPath;
-- (JSMessageViewReadNotificationPolicy) readNotificationPolicyForMessagesView:(NSIndexPath*) indexPath;
+
+- (JSMessageViewSpeakerPolicy)speakerPolicyForMessagesView:(NSIndexPath *)indexPath;
+
+- (JSMessageViewImageAttachment)imageAttachmentPolicyForMessagesView:(NSIndexPath *)indexPath;
+
+- (JSMessageViewReadNotificationPolicy)readNotificationPolicyForMessagesView:(NSIndexPath *)indexPath;
+
 - (BOOL)hasTimestampForRowAtIndexPath:(NSIndexPath *)indexPath;
+
 - (BOOL)hasSpeakerForRowAtIndexPath:(NSIndexPath *)indexPath;
 @end
-
 
 
 @protocol JSMessagesViewDataSource <NSObject>
 @required
 - (NSString *)textForRowAtIndexPath:(NSIndexPath *)indexPath;
-- (NSDate *)timestampForRowAtIndexPath:(NSIndexPath *)indexPath;
-- (NSString *)speakerNameForRowAtIndexPath:(NSIndexPath *) indexPath;
-- (NSString *) imageUrlForRowAtIndex:(NSIndexPath *) indexPath;
-- (NSDate *) readNotificationForRowAtIndex:(NSIndexPath *) indexPath;
-@end
 
+- (NSDate *)timestampForRowAtIndexPath:(NSIndexPath *)indexPath;
+
+- (NSString *)speakerNameForRowAtIndexPath:(NSIndexPath *)indexPath;
+
+- (NSString *)imageUrlForRowAtIndex:(NSIndexPath *)indexPath;
+
+- (NSDate *)readNotificationForRowAtIndex:(NSIndexPath *)indexPath;
+@end
 
 
 @interface JSMessagesViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UITextViewDelegate>
 
-@property (weak, nonatomic) id<JSMessagesViewDelegate> delegate;
-@property (weak, nonatomic) id<JSMessagesViewDataSource> dataSource;
-@property (strong, nonatomic) UITableView *tableView;
-@property (strong, nonatomic) JSMessageInputView *inputView;
-@property (assign, nonatomic) CGFloat previousTextViewContentHeight;
-@property (strong, nonatomic) ImageWorker *imageWorker;
-@property (strong, nonatomic) UIImage *placeHolderImage;
+@property(weak, nonatomic) id <JSMessagesViewDelegate> delegate;
+@property(weak, nonatomic) id <JSMessagesViewDataSource> dataSource;
+@property(strong, nonatomic) UITableView *tableView;
+@property(strong, nonatomic) JSMessageInputView *inputView;
+@property(assign, nonatomic) CGFloat previousTextViewContentHeight;
+@property(strong, nonatomic) ImageWorker *imageWorker;
+@property(strong, nonatomic) UIImage *placeHolderImage;
 
 #pragma mark - Initialization
 - (UIButton *)sendButton;
+
 - (UIButton *)attachImageButton;
 
 #pragma mark - Actions
 - (void)sendPressed:(UIButton *)sender;
+
 - (void)attachImage:(UIButton *)attachImage;
+
 - (void)handleSwipe:(UIGestureRecognizer *)guestureRecognizer;
 
 
 #pragma mark - Messages view controller
 - (BOOL)shouldHaveTimestampForRowAtIndexPath:(NSIndexPath *)indexPath;
+
 - (BOOL)shouldHaveSpeakerForRowAtIndexPath:(NSIndexPath *)indexPath;
+
 - (BOOL)shouldHaveImageAttachmentForRowAtIndexPath:(NSIndexPath *)indexPath;
+
 - (void)finishSend;
+
 - (void)setBackgroundColor:(UIColor *)color;
+
 - (void)scrollToBottomAnimated:(BOOL)animated;
 
 #pragma mark - Keyboard notifications
 - (void)handleWillShowKeyboard:(NSNotification *)notification;
+
 - (void)handleWillHideKeyboard:(NSNotification *)notification;
+
 - (void)keyboardWillShowHide:(NSNotification *)notification;
 
 @end

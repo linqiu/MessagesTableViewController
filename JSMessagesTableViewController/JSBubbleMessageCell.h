@@ -38,7 +38,7 @@
 
 #define DATE_LABEL_HEIGHT 12.0f
 
-@interface JSBubbleMessageCell : UITableViewCell
+@interface JSBubbleMessageCell : UITableViewCell<UIGestureRecognizerDelegate>
 @property (strong, nonatomic) JSBubbleView *bubbleView;
 
 #pragma mark - Initialization
@@ -55,6 +55,6 @@
 - (void)setTimestamp:(NSDate *)date;
 - (void)setSpeaker:(NSString*) name;
 - (void)setPicture:(UIImage *)image;
-- (void)setNotification:(NSDate *)read;
+- (void)setNotification:(NSDate *)readNotifDate;
 
 @end

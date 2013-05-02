@@ -98,6 +98,7 @@
     swipe.direction = UISwipeGestureRecognizerDirectionDown;
     swipe.numberOfTouchesRequired = 1;
     [self.inputView addGestureRecognizer:swipe];
+
 }
 
 - (UIButton *)sendButton {
@@ -109,6 +110,10 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self setup];
+
+    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+
+
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -160,12 +165,6 @@
     [self.inputView.textView resignFirstResponder];
 }
 
-//- (void)tapImage:(UITapGestureRecognizer *) gesture {
-//    UIImage *img = gesture.view;
-//    
-//    NSLog(@"touched this img: %@", img);
-//}
-
 - (void)attachImage:(UIButton *)sender {
     [self.delegate attachImage:sender];
 }
@@ -191,6 +190,7 @@
 
     JSBubbleMessageCell *cell = (JSBubbleMessageCell *) [tableView dequeueReusableCellWithIdentifier:CellID];
 
+
     if (!cell) {
         cell = [[JSBubbleMessageCell alloc] initWithBubbleStyle:style
                                                    hasTimestamp:hasTimestamp
@@ -202,19 +202,19 @@
 
     cell.imageView.userInteractionEnabled = YES;
     cell.imageView.tag = indexPath.row;
-
-
+    cell.selectionStyle = UITableViewCellSeparatorStyleNone;
 
     if (hasImageAttachment) {
+        UITapGestureRecognizer *tapped = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap:)];
+        tapped.numberOfTapsRequired = 1;
+
+
         NSString *filePath = [self.dataSource imageUrlForRowAtIndex:indexPath];
         [cell setPicture:self.placeHolderImage];
 
         [self.imageWorker loadImageFromFilePath:filePath success:^(UIImage *image) {
             [cell setPicture:image];
-            UITapGestureRecognizer *tapped = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap:)];
-            tapped.numberOfTapsRequired = 1;
             [cell addGestureRecognizer:tapped];
-
         }];
     }
 
@@ -236,22 +236,14 @@
 
 }
 
-+ (UIImage *)imageWithImage:(UIImage *)image scaledToSize:(CGSize)newSize {
-    //UIGraphicsBeginImageContext(newSize);
-    UIGraphicsBeginImageContextWithOptions(newSize, NO, 0.0);
-    [image drawInRect:CGRectMake(0, 0, newSize.width, newSize.height)];
-    UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    return newImage;
-}
-
 #pragma mark - Table view delegate
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     CGFloat dateHeight = [self shouldHaveTimestampForRowAtIndexPath:indexPath] ? DATE_LABEL_HEIGHT : 0.0f;
     CGFloat speakerHeight = [self shouldHaveSpeakerForRowAtIndexPath:indexPath] ? DATE_LABEL_HEIGHT : 0.0f;
-    CGFloat imageHeight = [self shouldHaveImageAttachmentForRowAtIndexPath:indexPath] ? 80.0f : 0.0f;
+    CGFloat imageHeight = [self shouldHaveImageAttachmentForRowAtIndexPath:indexPath] ? 90.0f : 0.0f;
+    CGFloat readNotificationHeight = [self shouldHaveReadNotificationForRowAtIndexPath:indexPath] ? DATE_LABEL_HEIGHT : 0.0f;
 
-    return [JSBubbleView cellHeightForText:[self.dataSource textForRowAtIndexPath:indexPath]] + dateHeight + speakerHeight + imageHeight;
+    return [JSBubbleView cellHeightForText:[self.dataSource textForRowAtIndexPath:indexPath]] + dateHeight + speakerHeight + imageHeight + readNotificationHeight;
 }
 
 #pragma mark - Messages view controller
@@ -269,7 +261,6 @@
     switch ([self.delegate imageAttachmentPolicyForMessagesView:indexPath]) {
         case JSMessageViewImageAttachmentPolicyNoImage:
             return NO;
-            break;
         case JSMessageViewImageAttachmentPolicyYesImage:
             return YES;
     }
@@ -327,7 +318,7 @@
 }
 
 -(void) handleTap:(UITapGestureRecognizer *)recognizer {
-    [self.delegate handleTap:recognizer];
+        [self.delegate handleTap:recognizer];
 }
 
 

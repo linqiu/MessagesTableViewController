@@ -33,12 +33,15 @@
 //  OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+#import <CoreGraphics/CoreGraphics.h>
 #import "JSBubbleView.h"
 #import "JSMessageInputView.h"
 #import "NSString+JSMessagesView.h"
 
 #define kMarginTop 6.0f
-#define kMarginBottom 4.0f
+//#define kMarginTop 14.0f
+//#define kMarginBottom 4.0f
+#define kMarginBottom 10.0f
 #define kPaddingTop 4.0f
 #define kPaddingBottom 8.0f
 #define kImageHeight 70.0f
@@ -72,7 +75,8 @@
         [self setup];
         self.style = bubbleStyle;
         self.attachmentView.userInteractionEnabled = YES;
-    
+
+
     }
     return self;
 }
@@ -93,6 +97,7 @@
 
 - (void)setAttachmentView:(UIImageView *)newAttachment
 {
+    newAttachment.contentMode = UIViewContentModeScaleAspectFit;
     attachmentView = newAttachment;
     [self setNeedsDisplay];
 }
@@ -104,30 +109,14 @@
     CGSize imageSize = [JSBubbleView imageSizeForImage:self.attachmentView.image];
     CGSize bubbleSize = [JSBubbleView bubbleSizeForText:self.text];
     
-    CGFloat bubbleHeight = 0.0f;
-    CGFloat bubbleWidth = 0.0f;
-    CGFloat imageWidth = 0.0f;
-    CGFloat imageHeight = 0.0f;
-    if (imageSize.width > bubbleSize.width)
-        bubbleWidth = imageSize.width;
-    else
-        bubbleWidth = bubbleSize.width;
-    
-    bubbleHeight = imageSize.height + bubbleSize.height;
-    
-    if([self.text isEqualToString:@""]) {
-        imageWidth = 100.0f;
-        imageHeight = 100.0f;
-    }
-        
-    
    CGRect bubbleFrame = CGRectMake(([self styleIsOutgoing] ? self.frame.size.width - bubbleSize.width : 0.0f),
                                     kMarginTop,
                                     bubbleSize.width,
                                     bubbleSize.height);
 
-    if(self.text != nil && ![self.text isEqualToString:@""])
+    if(self.text != nil && ![self.text isEqualToString:@""]){
         [image drawInRect:bubbleFrame];
+    }
         
     CGRect imageFrame = CGRectMake(([self styleIsOutgoing] ? self.frame.size.width - imageSize.width - 20.0f : 20.0f),
                                    bubbleSize.height + kMarginTop,
@@ -137,7 +126,7 @@
     self.attachmentView.frame = imageFrame;
 
     [self.attachmentView.image drawInRect:imageFrame];
-	
+
 	CGSize textSize = [JSBubbleView textSizeForText:self.text];
 	CGFloat textX = (CGFloat)image.leftCapWidth - 3.0f + ([self styleIsOutgoing] ? bubbleFrame.origin.x : 0.0f);
     CGRect textFrame = CGRectMake(textX,
@@ -149,7 +138,7 @@
                  withFont:[JSBubbleView font]
             lineBreakMode:NSLineBreakByWordWrapping
                 alignment:NSTextAlignmentLeft];
-    
+
 }
 
 
@@ -169,17 +158,12 @@
             return [[UIImage imageNamed:@"messageBubbleGray"] stretchableImageWithLeftCapWidth:23 topCapHeight:15];
         case JSBubbleMessageStyleIncomingSquare:
             return [[UIImage imageNamed:@"bubbleSquareIncoming"] stretchableImageWithLeftCapWidth:25 topCapHeight:15];
-            break;
-            break;
         case JSBubbleMessageStyleOutgoingDefault:
             return [[UIImage imageNamed:@"messageBubbleBlue"] stretchableImageWithLeftCapWidth:15 topCapHeight:15];
-            break;
         case JSBubbleMessageStyleOutgoingDefaultGreen:
             return [[UIImage imageNamed:@"messageBubbleGreen"] stretchableImageWithLeftCapWidth:15 topCapHeight:15];
-            break;
         case JSBubbleMessageStyleOutgoingSquare:
             return [[UIImage imageNamed:@"bubbleSquareOutgoing"] stretchableImageWithLeftCapWidth:15 topCapHeight:15];
-            break;
     }
     
     return nil;
@@ -209,9 +193,10 @@
     CGFloat ratio = img.size.width/img.size.height;
     
     width = ratio*height;
-    
-    if(img == nil)
+
+    if(img == nil){
         height = 0.0f;
+    }
     
     return CGSizeMake(width + kBubblePaddingRight,
                       height + kPaddingTop + kPaddingBottom);
@@ -227,14 +212,7 @@
 
 + (CGFloat)cellHeightForText:(NSString *)txt
 {
-    CGFloat imageHeight = 0.0f;
-    if ([txt rangeOfString:@"--image_attachment--"].location != NSNotFound) {
-        imageHeight = kImageHeight + 30.0f;
-    }
-    else {
-    }
-    
-    return [JSBubbleView bubbleSizeForText:txt].height +imageHeight + kMarginTop + kMarginBottom;
+    return [JSBubbleView bubbleSizeForText:txt].height + kMarginTop + kMarginBottom;
 }
 
 + (int)maxCharactersPerLine
@@ -247,6 +225,5 @@
 {
     return (txt.length / [JSBubbleView maxCharactersPerLine]) + 1;
 }
-
 
 @end
