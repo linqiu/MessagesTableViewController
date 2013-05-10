@@ -254,5 +254,8 @@
     self.readLabel.text = date;
 }
 
+-(void)setFailureMessage{
+    self.readLabel.text = @"failed";
+}
 
 @end

@@ -102,6 +102,8 @@ typedef enum {
 - (NSString *)imageUrlForRowAtIndex:(NSIndexPath *)indexPath;
 
 - (NSDate *)readNotificationForRowAtIndex:(NSIndexPath *)indexPath;
+
+- (BOOL)hasFailureForRowAtIndex:(NSIndexPath *)indexPath;
 @end
 
 

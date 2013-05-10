@@ -226,8 +226,14 @@
         [cell setSpeaker:[self.dataSource speakerNameForRowAtIndexPath:indexPath]];
     }
 
-    if (hasReadNotification) {
-        [cell setNotification:[self.dataSource readNotificationForRowAtIndex:indexPath]];
+
+    if([self.dataSource hasFailureForRowAtIndex:indexPath]){
+        [cell setFailureMessage];
+    } else {
+        if (hasReadNotification) {
+            [cell setNotification:[self.dataSource readNotificationForRowAtIndex:indexPath]];
+        }
+
     }
 
     [cell setMessage:[self.dataSource textForRowAtIndexPath:indexPath]];

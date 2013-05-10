@@ -56,5 +56,6 @@
 - (void)setSpeaker:(NSString*) name;
 - (void)setPicture:(UIImage *)image;
 - (void)setNotification:(NSDate *)readNotifDate;
+-(void)setFailureMessage;
 
 @end
