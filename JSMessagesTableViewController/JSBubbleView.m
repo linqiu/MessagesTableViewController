@@ -106,6 +106,7 @@
 - (void)drawRect:(CGRect)frame
 {
 	UIImage *image = [JSBubbleView bubbleImageForStyle:self.style];
+    UIImage *picImage = [JSBubbleView bubbleImageForStyle:self.style];
     CGSize imageSize = [JSBubbleView imageSizeForImage:self.attachmentView.image];
     CGSize bubbleSize = [JSBubbleView bubbleSizeForText:self.text];
     
@@ -117,17 +118,27 @@
     if(self.text != nil && ![self.text isEqualToString:@""]){
         [image drawInRect:bubbleFrame];
     }
-        
-    CGRect imageFrame = CGRectMake(([self styleIsOutgoing] ? self.frame.size.width - imageSize.width - 20.0f : 20.0f),
+    
+    CGRect picFrame = CGRectMake(([self styleIsOutgoing] ? self.frame.size.width - imageSize.width: 20.0f),
                                    bubbleSize.height + kMarginTop,
                                    (isnan(imageSize.width) ? 100.0f: imageSize.width),
                                    imageSize.height);
-
+    CGRect imageFrame = CGRectMake(([self styleIsOutgoing] ? self.frame.size.width - imageSize.width + 10.0f : 20.0f),
+                                   bubbleSize.height + kMarginTop*2,
+                                   (isnan(imageSize.width) ? 80.0f: imageSize.width*.8),
+                                   imageSize.height*.8);
+    
+    if(self.text == nil || [self.text isEqualToString:@""]) {
+        [picImage drawInRect:picFrame];
+    }
+    
     self.attachmentView.frame = imageFrame;
 
     [self.attachmentView.image drawInRect:imageFrame];
+    
 
-	CGSize textSize = [JSBubbleView textSizeForText:self.text];
+    
+    CGSize textSize = [JSBubbleView textSizeForText:self.text];
 	CGFloat textX = (CGFloat)image.leftCapWidth - 3.0f + ([self styleIsOutgoing] ? bubbleFrame.origin.x : 0.0f);
     CGRect textFrame = CGRectMake(textX,
                                   kPaddingTop + kMarginTop,
