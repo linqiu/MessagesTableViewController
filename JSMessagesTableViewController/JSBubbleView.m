@@ -119,22 +119,36 @@
         [image drawInRect:bubbleFrame];
     }
     
-    CGRect picFrame = CGRectMake(([self styleIsOutgoing] ? self.frame.size.width - imageSize.width: 20.0f),
+    CGFloat properPercent = 0.8;
+    if(!isnan(imageSize.width)) {
+        do {
+            properPercent = properPercent - 0.02;
+        } while (imageSize.width - (properPercent*imageSize.width) < 28.0f);
+    }
+    
+    CGFloat imagePadding = (imageSize.width/2) - (imageSize.width*properPercent/2);
+    
+    CGRect picFrame = CGRectMake(([self styleIsOutgoing] ? self.frame.size.width - imageSize.width: 0.0f),
                                    bubbleSize.height + kMarginTop,
                                    (isnan(imageSize.width) ? 100.0f: imageSize.width),
                                    imageSize.height);
-    CGRect imageFrame = CGRectMake(([self styleIsOutgoing] ? self.frame.size.width - imageSize.width + 10.0f : 20.0f),
+    
+    CGRect imageFrame = CGRectMake(([self styleIsOutgoing] ? self.frame.size.width - imageSize.width + imagePadding - 3.0: 0.0f + imagePadding+3.0),
                                    bubbleSize.height + kMarginTop*2,
-                                   (isnan(imageSize.width) ? 80.0f: imageSize.width*.8),
-                                   imageSize.height*.8);
+                                   (isnan(imageSize.width) ? 80.0f: imageSize.width*properPercent),
+                                   imageSize.height*0.8                                     );
     
     if(self.text == nil || [self.text isEqualToString:@""]) {
         [picImage drawInRect:picFrame];
     }
     
     self.attachmentView.frame = imageFrame;
-
     [self.attachmentView.image drawInRect:imageFrame];
+
+//    self.attachmentView.layer.cornerRadius = 10.0;
+//    self.attachmentView.layer.masksToBounds = YES;
+//    self.attachmentView.layer.borderColor = [UIColor lightGrayColor].CGColor;
+    
     
 
     
