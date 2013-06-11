@@ -94,14 +94,14 @@
     self.textView.returnKeyType = UIReturnKeyDefault;
     [self addSubview:self.textView];
 	
-    UIImageView *inputFieldBack = [[UIImageView alloc] initWithFrame:CGRectMake(self.textView.frame.origin.x-1.0f,
+    self.inputFieldBack = [[UIImageView alloc] initWithFrame:CGRectMake(self.textView.frame.origin.x-1.0f,
                                                                                 0.0f,
                                                                                 self.textView.frame.size.width + 2.0f,
                                                                                 self.frame.size.height)];
-    inputFieldBack.image = [[UIImage imageNamed:@"input-field"] resizableImageWithCapInsets:UIEdgeInsetsMake(20.0f, 12.0f, 18.0f, 18.0f)];
-    inputFieldBack.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
-    inputFieldBack.backgroundColor = [UIColor clearColor];
-    [self addSubview:inputFieldBack];
+    self.inputFieldBack.image = [[UIImage imageNamed:@"input-field"] resizableImageWithCapInsets:UIEdgeInsetsMake(20.0f, 12.0f, 18.0f, 18.0f)];
+    self.inputFieldBack.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
+    self.inputFieldBack.backgroundColor = [UIColor clearColor];
+    [self addSubview:self.inputFieldBack];
 }
 
 #pragma mark - Setters
@@ -157,5 +157,7 @@
 {
     return ([JSMessageInputView maxLines] + 1.0f) * [JSMessageInputView textViewLineHeight];
 }
+
+
 
 @end

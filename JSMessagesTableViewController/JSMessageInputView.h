@@ -38,6 +38,8 @@
 @interface JSMessageInputView : UIImageView
 
 @property (strong, nonatomic) UITextView *textView;
+@property (strong, nonatomic) UIImageView *inputFieldBack;
+@property (assign, nonatomic) NSInteger locationOfImage;
 @property (strong, nonatomic) UIButton *sendButton;
 @property (strong, nonatomic) UIButton *attachImageButton;
 
