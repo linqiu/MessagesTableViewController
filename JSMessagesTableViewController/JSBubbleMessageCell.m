@@ -155,7 +155,7 @@
         [self configureTimestampLabel];
 
         bubbleY = 15.0f;
-        bubbleheight = 24.5f;
+        bubbleheight = 22.5f;
     } else if(hasTimestamp && !hasSpeakerLabel && hasRead){
         [self configureReadLabel:31.5f];
         [self configureTimestampLabel];
