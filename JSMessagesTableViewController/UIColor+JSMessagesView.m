@@ -32,7 +32,8 @@
 
 + (UIColor *)messagesBackgroundColor
 {
-    return [UIColor colorWithRed:0.859f green:0.886f blue:0.929f alpha:1.0f];
+//    return [UIColor colorWithRed:0.859f green:0.886f blue:0.929f alpha:1.0f];
+    return [UIColor colorWithRed:0.949f green:0.949f blue:0.909f alpha:1.0f];
 }
 
 + (UIColor *)messagesTimestampColor
