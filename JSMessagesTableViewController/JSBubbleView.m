@@ -196,7 +196,7 @@
 
 + (UIFont *)font
 {
-    return [UIFont systemFontOfSize:16.0f];
+    return [UIFont fontWithName:@"Roboto-Light" size:16.0f];
 }
 
 + (CGSize)textSizeForText:(NSString *)txt

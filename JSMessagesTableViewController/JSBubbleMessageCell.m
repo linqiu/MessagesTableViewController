@@ -90,7 +90,7 @@
     self.timestampLabel.textColor = [UIColor messagesTimestampColor];
     self.timestampLabel.shadowColor = [UIColor whiteColor];
     self.timestampLabel.shadowOffset = CGSizeMake(0.0f, 1.0f);
-    self.timestampLabel.font = [UIFont boldSystemFontOfSize:11.5f];
+    self.timestampLabel.font = [UIFont fontWithName:@"Roboto-Bold" size:11.5f];
     
     [self.contentView addSubview:self.timestampLabel];
     [self.contentView bringSubviewToFront:self.timestampLabel];
@@ -107,7 +107,7 @@
     self.readLabel.textColor = [UIColor messagesTimestampColor];
     self.readLabel.shadowColor = [UIColor whiteColor];
     self.readLabel.shadowOffset = CGSizeMake(0.0f, 1.0f);
-    self.readLabel.font = [UIFont boldSystemFontOfSize:11.0f];
+    self.readLabel.font = [UIFont fontWithName:@"Roboto-Bold" size:11.0f];
     self.readLabel.autoresizingMask = (UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin|UIViewAutoresizingFlexibleHeight);
     
     [self.contentView addSubview:self.readLabel];
@@ -126,7 +126,7 @@
     self.speakerLabel.textColor = [UIColor messagesSpeakerColor];
     self.speakerLabel.shadowColor = [UIColor whiteColor];
     self.speakerLabel.shadowOffset = CGSizeMake(0.0f, 1.0f);
-    self.speakerLabel.font = [UIFont boldSystemFontOfSize:11.5f];
+    self.speakerLabel.font = [UIFont fontWithName:@"Roboto-Bold" size:11.5f];
     
     [self.contentView addSubview:self.speakerLabel];
     [self.contentView bringSubviewToFront:self.speakerLabel];
