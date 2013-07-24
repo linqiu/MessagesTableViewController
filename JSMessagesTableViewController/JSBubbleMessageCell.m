@@ -108,7 +108,8 @@
     self.readLabel.shadowColor = [UIColor whiteColor];
     self.readLabel.shadowOffset = CGSizeMake(0.0f, 1.0f);
     self.readLabel.font = [UIFont fontWithName:@"Roboto-Bold" size:11.0f];
-    self.readLabel.autoresizingMask = (UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin|UIViewAutoresizingFlexibleHeight);
+    self.readLabel.autoresizingMask = (UIViewAutoresizingFlexibleTopMargin);
+                                       //| UIViewAutoresizingFlexibleBottomMargin|UIViewAutoresizingFlexibleHeight);
     
     [self.contentView addSubview:self.readLabel];
     [self.contentView bringSubviewToFront:self.readLabel];
