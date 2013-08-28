@@ -134,7 +134,7 @@
     NSError *error = nil;
     [[NSFileManager defaultManager] createDirectoryAtPath:imgDir withIntermediateDirectories:YES attributes:nil error:&error];
     if (error != nil) {
-        DLog(@"error created directory: %@", error);
+        NSLog(@"error created directory: %@", error);
     }
 
     return filePath;
